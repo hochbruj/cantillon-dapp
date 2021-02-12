@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import Header from "./components/Header";
+import { CssBaseline } from "@material-ui/core";
+import Routes from "./views/Routes";
+import Footer from "./components/Footer";
+import { Router } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import { Portfolio } from "./sharedTypes/portfolios";
+import { getPortfolios } from "./services/getPortfolios";
 
-function App() {
+const browserHistory = createBrowserHistory();
+
+export default function App() {
+  const [portfolios, setPortfolios] = useState<Portfolio[] | null>(null);
+
+  useEffect(() => {
+    const loadPortfolios = async () => {
+      setPortfolios(await getPortfolios());
+    };
+    loadPortfolios();
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <CssBaseline />
+      <Header />
+      <Router history={browserHistory}>
+        <Routes portfolios={portfolios} />
+      </Router>
+      <Footer />
+    </React.Fragment>
   );
 }
-
-export default App;
