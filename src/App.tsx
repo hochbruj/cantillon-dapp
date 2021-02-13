@@ -22,11 +22,11 @@ export default function App() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Header />
       <Router history={browserHistory}>
+        <Header />
         <Routes portfolios={portfolios} />
+        <Footer />
       </Router>
-      <Footer />
     </React.Fragment>
   );
 }
