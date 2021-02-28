@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 import {
   Button,
   Card,
@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   heroContent: {
-    backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6),
   },
   cardGrid: {
@@ -37,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     display: "flex",
     flexDirection: "column",
+    transition: "transform 0.15s ease-in-out",
+  },
+  cardHovered: {
+    transform: "scale3d(1.05, 1.05, 1)",
   },
   cardMedia: {
     paddingTop: "56.25%", // 16:9
@@ -53,9 +56,28 @@ interface PortfoliosProps {
   portfolios: Portfolio[] | null;
 }
 
+interface CardsRaised {
+  [key: string]: boolean;
+}
+
 const Portfolios: FC<PortfoliosProps> = ({ portfolios }) => {
   const classes = useStyles();
   const history = useHistory();
+
+  const [cardStates, setCardState] = useState<CardsRaised | null>(null);
+
+  useEffect(() => {
+    if (portfolios) {
+      const initialCardStates: CardsRaised = portfolios!.reduce(
+        (obj, item) => ({
+          ...obj,
+          [item.id]: false,
+        }),
+        {}
+      );
+      setCardState(initialCardStates);
+    }
+  }, [portfolios]);
 
   const viewDetail = (portfolio: Portfolio) => {
     history.push(ROUTES.PORTFOLIO, { portfolio });
@@ -89,13 +111,31 @@ const Portfolios: FC<PortfoliosProps> = ({ portfolios }) => {
         </Container>
       </div>
       <Container className={classes.cardGrid} maxWidth="md">
-        {portfolios ? (
+        {portfolios && cardStates ? (
           <Grid container spacing={4}>
             {portfolios
               .sort((a, b) => (a.id > b.id ? 1 : -1))
               .map((portfolio: Portfolio) => (
                 <Grid item key={portfolio.id} xs={12} sm={6} md={4}>
-                  <Card className={classes.card}>
+                  <Card
+                    className={classes.card}
+                    classes={{
+                      root: cardStates[portfolio.id] ? classes.cardHovered : "",
+                    }}
+                    onMouseOver={() =>
+                      setCardState({
+                        ...cardStates,
+                        [portfolio.id]: true,
+                      })
+                    }
+                    onMouseOut={() =>
+                      setCardState({
+                        ...cardStates,
+                        [portfolio.id]: false,
+                      })
+                    }
+                    raised={cardStates[portfolio.id]}
+                  >
                     <CardMedia
                       className={classes.cardMedia}
                       image={`/images/Portfolio_${portfolio.id}.jpg`}

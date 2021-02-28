@@ -58,7 +58,6 @@ const Calculator: FC<CalculatorProps> = ({ portfolio }) => {
   const [inputAmount, setInputAmount] = useState<number>(initalAmount);
 
   const handleChange = (event: any) => {
-    console.log("setting", event);
     setAmounts(getAmounts(event.target.value));
     setInputAmount(event.target.value);
   };
