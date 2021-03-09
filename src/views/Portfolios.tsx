@@ -13,7 +13,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Portfolio } from "../sharedTypes/portfolios";
 import { formatPercentage } from "../utilities/formatters";
-import { useHistory, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ROUTES } from "../config/routes";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(8, 0, 6),
   },
   cardGrid: {
-    paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
   },
   link: {
@@ -65,7 +64,6 @@ interface CardsRaised {
 
 const Portfolios: FC<PortfoliosProps> = ({ portfolios }) => {
   const classes = useStyles();
-  const history = useHistory();
 
   const [cardStates, setCardState] = useState<CardsRaised | null>(null);
 

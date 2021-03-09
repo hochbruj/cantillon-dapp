@@ -10,3 +10,11 @@ export const formatAmount = (value: number): string => {
     maximumFractionDigits: 0,
   }).format(value === -(-0) ? 0 : value);
 };
+
+export const abbreviateAddress = (address: string): string => {
+  if (!address) return address;
+  return `${address.substring(0, 5)}...${address.substring(
+    address.length - 3,
+    address.length
+  )}`;
+};

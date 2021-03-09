@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Web3 from "web3";
 import Header from "./components/Header";
 import { CssBaseline, PaletteType } from "@material-ui/core";
 import Routes from "./views/Routes";
@@ -8,6 +9,7 @@ import { createBrowserHistory } from "history";
 import { Portfolio } from "./sharedTypes/portfolios";
 import { getPortfolios } from "./services/getPortfolios";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { StoreProvider } from "./store/store";
 
 const browserHistory = createBrowserHistory();
 
@@ -21,8 +23,6 @@ export default function App() {
     },
   });
 
-  console.log(theme);
-
   useEffect(() => {
     const loadPortfolios = async () => {
       setPortfolios(await getPortfolios());
@@ -33,11 +33,13 @@ export default function App() {
     <React.Fragment>
       <ThemeProvider theme={muiTheme}>
         <CssBaseline />
-        <Router history={browserHistory}>
-          <Header setTheme={setTheme} theme={theme} />
-          <Routes portfolios={portfolios} />
-          <Footer />
-        </Router>
+        <StoreProvider>
+          <Router history={browserHistory}>
+            <Header setTheme={setTheme} theme={theme} />
+            <Routes portfolios={portfolios} />
+            <Footer />
+          </Router>
+        </StoreProvider>
       </ThemeProvider>
     </React.Fragment>
   );

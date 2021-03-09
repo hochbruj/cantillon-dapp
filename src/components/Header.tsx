@@ -11,6 +11,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { ROUTES } from "../config/routes";
 import ThemeButton from "./ThemeButton";
 import { FC } from "react";
+import WalletConnectButton from "./WalletConnectButton";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -54,6 +55,7 @@ const Header: FC<HeaderProps> = ({ setTheme, theme }) => {
         </Typography>
         <img alt="Logo" className={classes.logo} src="/images/Logo.png" />
         <div className={classes.flexGrow} />
+        <WalletConnectButton />
         <ThemeButton setTheme={setTheme} theme={theme} />
       </Toolbar>
     </AppBar>
