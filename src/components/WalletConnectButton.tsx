@@ -19,6 +19,8 @@ import copy from "copy-to-clipboard";
 import { makeStyles } from "@material-ui/core/styles";
 import { useStore, ConnectedWeb3 } from "../store/store";
 import { abbreviateAddress } from "../utilities/formatters";
+import { networks } from "../config/ethData";
+import { capitalize } from "../utilities/formatters";
 
 const useStyles = makeStyles((theme) => ({
   connectIcon: {
@@ -87,12 +89,12 @@ const WalletConnectButton: FC = () => {
     const web3 = new Web3(provider);
     const accounts = await web3.eth.getAccounts();
     const account = accounts[0];
-    const network = "main";
+    const networkId = await web3.eth.net.getId();
     const wallet = "Metamask";
     const connectedWeb3: ConnectedWeb3 = {
       web3,
       account,
-      network,
+      network: networks[networkId],
       wallet,
     };
     dispatch({ type: "connectWeb3", connectedWeb3 });
@@ -126,7 +128,7 @@ const WalletConnectButton: FC = () => {
           <Button
             variant="contained"
             ref={anchorRef}
-            href="#"
+            href=""
             color="secondary"
             onClick={handleToggle}
             className={classes.walletButton}
@@ -158,7 +160,9 @@ const WalletConnectButton: FC = () => {
                         <FiberManualRecordIcon
                           className={classes.connectIcon}
                         />
-                        Mainnet Ethereum Network
+                        {`Ethereum ${capitalize(
+                          state.connectedWeb3!.network
+                        )} Network`}
                       </MenuItem>
                       <MenuItem
                         className={classes.menuItemAddress}

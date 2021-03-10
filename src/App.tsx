@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Web3 from "web3";
 import Header from "./components/Header";
 import { CssBaseline, PaletteType } from "@material-ui/core";
 import Routes from "./views/Routes";
@@ -10,6 +9,7 @@ import { Portfolio } from "./sharedTypes/portfolios";
 import { getPortfolios } from "./services/getPortfolios";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { StoreProvider } from "./store/store";
+import Web3Data from "./components/Web3Data";
 
 const browserHistory = createBrowserHistory();
 
@@ -34,6 +34,7 @@ export default function App() {
       <ThemeProvider theme={muiTheme}>
         <CssBaseline />
         <StoreProvider>
+          <Web3Data />
           <Router history={browserHistory}>
             <Header setTheme={setTheme} theme={theme} />
             <Routes portfolios={portfolios} />

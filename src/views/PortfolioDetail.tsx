@@ -16,12 +16,12 @@ import {
 import Calculator from "../components/Calculator";
 import { makeStyles } from "@material-ui/core/styles";
 import { Portfolio, Weights } from "../sharedTypes/portfolios";
-import { Token } from "../sharedTypes/tokens";
+import { Token } from "../sharedTypes/eth.types";
 import { useLocation } from "react-router-dom";
 import { formatPercentage } from "../utilities/formatters";
 import GetPortfolioModal from "../components/GetPortfolioModal";
 
-const tokens: [Token] = require("../config/tokens.json");
+import { tokens } from "../config/ethData";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -145,27 +145,27 @@ const PortfolioDetail = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tokens.map((token) => (
-                <TableRow key={token.id}>
+              {Object.keys(tokens).map((token: string) => (
+                <TableRow key={token}>
                   <TableCell>
                     <div className={classes.tokenContainer}>
                       <img
                         className={classes.avatar}
-                        src={`/tokens/${token.id}.png`}
+                        src={`/tokens/${token}.png`}
                       />
-                      <Typography variant="body1">{token.id}</Typography>
+                      <Typography variant="body1">{token}</Typography>
                     </div>
                   </TableCell>
                   <TableCell>
                     {" "}
-                    <Link href={token.link} target="_blank">
-                      {token.name}
+                    <Link href={tokens[token as Token].link} target="_blank">
+                      {tokens[token as Token].name}
                     </Link>
                   </TableCell>
-                  <TableCell>{token.assetClass}</TableCell>
+                  <TableCell>{tokens[token as Token].assetClass}</TableCell>
                   <TableCell align="right">
                     {formatPercentage(
-                      portfolio.weights[token.id as keyof Weights]
+                      portfolio.weights[token as keyof Weights]
                     )}
                   </TableCell>
                 </TableRow>

@@ -13,9 +13,8 @@ import {
 } from "@material-ui/core";
 import { FC } from "react";
 import { Portfolio } from "../sharedTypes/portfolios";
-import { Token } from "../sharedTypes/tokens";
-
-const tokens: [Token] = require("../config/tokens.json");
+import { Token } from "../sharedTypes/eth.types";
+import { tokens } from "../config/ethData";
 
 const useStyles = makeStyles((theme) => ({
   assetAllocation: {
@@ -48,8 +47,8 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
   portfolio,
 }) => {
   const classes = useStyles();
-  const assets = tokens.filter(
-    (token) => portfolio.weights[token.id] > 0 && token.id !== "ETH"
+  const assets = Object.keys(tokens).filter(
+    (token) => portfolio.weights[token] > 0 && token !== "ETH"
   );
 
   return (
@@ -67,14 +66,14 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
           </TableHead>
           <TableBody>
             {assets.map((token) => (
-              <TableRow key={token.id}>
+              <TableRow key={token}>
                 <TableCell>
                   <div className={classes.tokenContainer}>
                     <img
                       className={classes.avatar}
-                      src={`/tokens/${token.id}.png`}
+                      src={`/tokens/${token}.png`}
                     />
-                    <Typography variant="body1">{token.id}</Typography>
+                    <Typography variant="body1">{token}</Typography>
                   </div>
                 </TableCell>
                 <TableCell>10000</TableCell>
