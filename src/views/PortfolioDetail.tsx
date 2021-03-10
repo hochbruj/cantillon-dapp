@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Grid,
@@ -11,6 +11,7 @@ import {
   CardMedia,
   TableBody,
   Link,
+  Button,
 } from "@material-ui/core";
 import Calculator from "../components/Calculator";
 import { makeStyles } from "@material-ui/core/styles";
@@ -18,6 +19,7 @@ import { Portfolio, Weights } from "../sharedTypes/portfolios";
 import { Token } from "../sharedTypes/tokens";
 import { useLocation } from "react-router-dom";
 import { formatPercentage } from "../utilities/formatters";
+import GetPortfolioModal from "../components/GetPortfolioModal";
 
 const tokens: [Token] = require("../config/tokens.json");
 
@@ -73,6 +75,7 @@ const PortfolioDetail = () => {
   const classes = useStyles();
   const { state } = useLocation<PortfolioDetailState>();
   const { portfolio } = state;
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -237,6 +240,23 @@ const PortfolioDetail = () => {
         </Table>
       </Container>
       <Calculator portfolio={portfolio} />
+      <Container className={classes.overview} maxWidth="md">
+        <Grid container justify="center">
+          <Button
+            size="large"
+            color="primary"
+            variant="contained"
+            onClick={() => setModalOpen(true)}
+          >
+            Get this portfolio
+          </Button>
+        </Grid>
+      </Container>
+      <GetPortfolioModal
+        open={modalOpen}
+        setModalOpen={setModalOpen}
+        portfolio={portfolio}
+      />
     </main>
   );
 };

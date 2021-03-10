@@ -17,9 +17,5 @@ export interface Returns {
 }
 
 export interface Weights {
-  ETH: number;
-  WBTC: number;
-  PMGT: number;
-  aDAI: number;
-  cDAI: number;
+  [key: string]: number;
 }
