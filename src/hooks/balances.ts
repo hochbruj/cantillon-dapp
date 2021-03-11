@@ -3,6 +3,7 @@ import { useStore } from "../store/store";
 import { tokens, contractsAddressesMap } from "../config/ethData";
 import { Balances, Token } from "../sharedTypes/eth.types";
 import ERC20 from "../contracts/ERC20.json";
+import { getPrices } from "../services/getPrices";
 
 export const useBalances = () => {
   const { state, dispatch } = useStore();
@@ -37,6 +38,8 @@ export const useBalances = () => {
       }
       balances.ETH = await web3.eth.getBalance(account!);
       dispatch({ type: "updateBalances", balances });
+
+      await getPrices();
     }
     if (account) {
       console.log("calling get balances");

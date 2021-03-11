@@ -28,24 +28,28 @@ export const tokens: TokenDetailMap = Object.freeze({
     link: "https://ethereum.org/",
     assetClass: "Crypto",
     decimals: 18,
+    coingeckoId: "ethereum",
   },
   WBTC: {
     name: "Wrapped Bitcoin",
     link: "https://wbtc.network/",
     assetClass: "Crypto",
     decimals: 8,
+    coingeckoId: "wrapped-bitcoin",
   },
   PMGT: {
     name: "Perth Mint Gold Token",
     link: "https://pmgt.io/",
     assetClass: "Gold",
     decimals: 5,
+    coingeckoId: "perth-mint-gold-token",
   },
   aUSDC: {
     name: "Aave Interest bearing USDC",
     link: "https://aave.com/",
     assetClass: "Cash",
     decimals: 6,
+    coingeckoId: "aave-usdc",
   },
 });
 

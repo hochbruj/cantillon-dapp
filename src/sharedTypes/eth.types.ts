@@ -11,6 +11,7 @@ export type TokenDetailMap = {
   [key in Token]: {
     name: string;
     link: string;
+    coingeckoId: string;
     assetClass: string;
     decimals: number;
   };
