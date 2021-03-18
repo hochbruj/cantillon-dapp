@@ -8,13 +8,14 @@ import {
   Fetcher,
   Route,
   TradeType,
+  Percent,
 } from "@uniswap/sdk";
 import { useStore } from "../store/store";
-import { Token, TradeAmounts, UniswapAmounts } from "../sharedTypes/eth.types";
+import { Token, TokenAmounts, UniswapAmounts } from "../sharedTypes/eth.types";
 import { contractsAddressesMap, tokens } from "../config/ethData";
 import { native } from "../utilities/formatters";
 
-export const useUniswap = (tradeAmounts: TradeAmounts) => {
+export const useUniswap = (tradeAmounts: TokenAmounts) => {
   const { state } = useStore();
   const { connectedWeb3 } = state;
   const [uniswapAmounts, setUniswapAmounts] = useState({} as UniswapAmounts);
@@ -24,7 +25,7 @@ export const useUniswap = (tradeAmounts: TradeAmounts) => {
       const chainId: ChainId = await connectedWeb3!.web3.eth.net.getId();
       const { network } = connectedWeb3!;
       const assets = Object.keys(tokens).filter(
-        (token) => token !== "ETH" && tradeAmounts[token] !== "0"
+        (token) => token !== "ETH" && tradeAmounts[token as Token] !== "0"
       ) as [Token];
 
       const tokenPromises = Promise.all(
@@ -50,8 +51,17 @@ export const useUniswap = (tradeAmounts: TradeAmounts) => {
           new TokenAmount(WETH[chainId], tradeAmounts[token]),
           TradeType.EXACT_INPUT
         );
-        uniswapAmounts[token] = trade.executionPrice.toSignificant(6);
+
+        const slippageTolerance = new Percent("50", "10000");
+        uniswapAmounts[token] = {
+          executionPrice: trade.executionPrice.toSignificant(6),
+          amountOutMin: trade
+            .minimumAmountOut(slippageTolerance)
+            .toSignificant(6),
+        };
+
         i++;
+        setUniswapAmounts(uniswapAmounts);
       }
     }
     if (connectedWeb3 && tradeAmounts) {

@@ -1,11 +1,12 @@
 // store.js
 import React, { FC, createContext, useContext, useReducer } from "react";
 import Web3 from "web3";
-import { Balances, EthereumNetwork } from "../sharedTypes/eth.types";
+import { TokenAmounts, EthereumNetwork } from "../sharedTypes/eth.types";
 
 interface State {
   connectedWeb3: ConnectedWeb3 | null;
-  balances: Balances | null;
+  balances: TokenAmounts | null;
+  prices: TokenAmounts | null;
 }
 
 export interface ConnectedWeb3 {
@@ -18,12 +19,14 @@ export interface ConnectedWeb3 {
 type Action =
   | { type: "connectWeb3"; connectedWeb3: ConnectedWeb3 }
   | { type: "disconnectWeb3" }
-  | { type: "updateBalances"; balances: Balances }
-  | { type: "updateAccount"; account: string };
+  | { type: "updateBalances"; balances: TokenAmounts }
+  | { type: "updateAccount"; account: string }
+  | { type: "updatePrices"; prices: TokenAmounts };
 
 const initialState: State = {
   connectedWeb3: null,
   balances: null,
+  prices: null,
 };
 
 type StoreContextType = {
@@ -54,6 +57,11 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         balances: action.balances,
+      };
+    case "updatePrices":
+      return {
+        ...state,
+        prices: action.prices,
       };
   }
 };

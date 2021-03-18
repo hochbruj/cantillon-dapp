@@ -25,6 +25,14 @@ export const abbreviateAddress = (address: string): string => {
   )}`;
 };
 
+export const formatToUsd = (value: number, maximumFractionDigits = 2): string =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits,
+  }).format(value);
+
 export const native = (token: Token): Token => {
   const tokenString: string = token;
   if (tokenString.charAt(0) === "a") return tokenString.substring(1) as Token;

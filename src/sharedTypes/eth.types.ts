@@ -17,16 +17,15 @@ export type TokenDetailMap = {
   };
 };
 
-export type Balances = {
+export type TokenAmounts = {
   [key in Token]: string;
 };
 
-export type TradeAmounts = {
-  [key: string]: string;
-};
-
 export type UniswapAmounts = {
-  [key: string]: string;
+  [key in Token]: {
+    amountOutMin: string;
+    executionPrice: string;
+  };
 };
 
 export type NetworkMap = {

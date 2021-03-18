@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useBalances } from "../hooks/useBalances";
 import { useStore } from "../store/store";
+import { usePrices } from "../hooks/usePrices";
 
 const Web3Data: FC = () => {
   const { state, dispatch } = useStore();
@@ -13,6 +14,7 @@ const Web3Data: FC = () => {
   });
 
   useBalances();
+  usePrices();
 
   console.log("state", state);
 

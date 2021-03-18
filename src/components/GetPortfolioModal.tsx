@@ -17,6 +17,8 @@ import { Token } from "../sharedTypes/eth.types";
 import { tokens } from "../config/ethData";
 import { useTradeAmounts } from "../hooks/useTradeAmounts";
 import { useUniswap } from "../hooks/useUniswap";
+import { useStore } from "../store/store";
+import { formatToUsd } from "../utilities/formatters";
 
 const useStyles = makeStyles((theme) => ({
   assetAllocation: {
@@ -49,14 +51,15 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
   portfolio,
 }) => {
   const classes = useStyles();
+  const { state, dispatch } = useStore();
+  const { prices } = state;
+
   const assets = Object.keys(tokens).filter(
     (token) => portfolio.weights[token] > 0 && token !== "ETH"
-  );
+  ) as [Token];
 
   const tradeAmounts = useTradeAmounts(portfolio);
-  console.log("trade amounts", tradeAmounts);
   const uniswapAmounts = useUniswap(tradeAmounts);
-  console.log("uniswap amounts", uniswapAmounts);
 
   return (
     <Dialog open={open} onClose={() => setModalOpen(false)}>
@@ -83,8 +86,19 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                     <Typography variant="body1">{token}</Typography>
                   </div>
                 </TableCell>
-                <TableCell>10000</TableCell>
-                <TableCell>10000</TableCell>
+                <TableCell align="right">
+                  {uniswapAmounts[token]
+                    ? uniswapAmounts[token].amountOutMin
+                    : "..."}
+                </TableCell>
+                <TableCell>
+                  {uniswapAmounts[token] && prices
+                    ? formatToUsd(
+                        Number(uniswapAmounts[token].amountOutMin) *
+                          Number(prices[token])
+                      )
+                    : "..."}
+                </TableCell>
                 <TableCell>10000</TableCell>
               </TableRow>
             ))}
