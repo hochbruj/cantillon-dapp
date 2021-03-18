@@ -15,6 +15,8 @@ import { FC } from "react";
 import { Portfolio } from "../sharedTypes/portfolios";
 import { Token } from "../sharedTypes/eth.types";
 import { tokens } from "../config/ethData";
+import { useTradeAmounts } from "../hooks/useTradeAmounts";
+import { useUniswap } from "../hooks/useUniswap";
 
 const useStyles = makeStyles((theme) => ({
   assetAllocation: {
@@ -50,6 +52,11 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
   const assets = Object.keys(tokens).filter(
     (token) => portfolio.weights[token] > 0 && token !== "ETH"
   );
+
+  const tradeAmounts = useTradeAmounts(portfolio);
+  console.log("trade amounts", tradeAmounts);
+  const uniswapAmounts = useUniswap(tradeAmounts);
+  console.log("uniswap amounts", uniswapAmounts);
 
   return (
     <Dialog open={open} onClose={() => setModalOpen(false)}>

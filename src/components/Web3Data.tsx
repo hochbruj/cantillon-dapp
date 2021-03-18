@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useBalances } from "../hooks/balances";
+import { useBalances } from "../hooks/useBalances";
 import { useStore } from "../store/store";
 
 const Web3Data: FC = () => {

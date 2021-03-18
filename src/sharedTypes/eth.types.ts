@@ -21,6 +21,14 @@ export type Balances = {
   [key in Token]: string;
 };
 
+export type TradeAmounts = {
+  [key: string]: string;
+};
+
+export type UniswapAmounts = {
+  [key: string]: string;
+};
+
 export type NetworkMap = {
   [key: number]: EthereumNetwork;
 };

@@ -8,7 +8,7 @@ import {
 export const contractsAddressesMap: ContractsAddressesMap = Object.freeze({
   kovan: {
     WBTC: "0x967461bf547cc7faa454c3b817227dc68bf4edbe",
-    PMGT: "0x825a083bde58cded115ac92d3a3d6a2f56ed9917",
+    PMGT: "0x7Ac060f34f52299f793E6B04B26cCCBEeB01a6dD",
     USDC: "0xe22da380ee6b445bb8273c81944adeb6e8450422",
     aUSDC: "0xe12afec5aa12cf614678f9bfeeb98ca9bb95b5b0",
     ETH: "0x",

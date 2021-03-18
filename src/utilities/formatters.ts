@@ -1,3 +1,5 @@
+import { Token } from "../sharedTypes/eth.types";
+
 export const formatPercentage = (value: number): string => {
   return (value * 100).toFixed(1) + "%";
 };
@@ -21,4 +23,10 @@ export const abbreviateAddress = (address: string): string => {
     address.length - 3,
     address.length
   )}`;
+};
+
+export const native = (token: Token): Token => {
+  const tokenString: string = token;
+  if (tokenString.charAt(0) === "a") return tokenString.substring(1) as Token;
+  return token;
 };
