@@ -61,6 +61,20 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
   const tradeAmounts = useTradeAmounts(portfolio);
   const uniswapAmounts = useUniswap(tradeAmounts);
 
+  const slippage = (
+    ethAmount: string,
+    ethPrice: string,
+    tokenAmount: string,
+    tokenPrice: string
+  ): string => {
+    return formatToUsd(
+      Number(tokenAmount) * Number(tokenPrice) -
+        (Number(ethAmount) / 1e16) * Number(ethPrice)
+    );
+  };
+
+  console.log(tradeAmounts);
+
   return (
     <Dialog open={open} onClose={() => setModalOpen(false)}>
       <DialogTitle id="simple-dialog-title">{`${portfolio.name} portfolio asset purchases`}</DialogTitle>
@@ -99,7 +113,16 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                       )
                     : "..."}
                 </TableCell>
-                <TableCell>10000</TableCell>
+                <TableCell>
+                  {uniswapAmounts[token] && prices && tradeAmounts
+                    ? slippage(
+                        tradeAmounts[token],
+                        prices.ETH,
+                        uniswapAmounts[token].amountOutMin,
+                        prices[token]
+                      )
+                    : "..."}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
