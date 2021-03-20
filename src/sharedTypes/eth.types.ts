@@ -3,7 +3,12 @@ export type Token = "WBTC" | "PMGT" | "aUSDC" | "ETH";
 
 export type ContractsAddressesMap = {
   [key in EthereumNetwork]: {
-    [key in Token]: string;
+    ETH: string;
+    WBTC: string;
+    USDC: string;
+    PMGT: string;
+    aUSDC: string;
+    PortfolioBalancer: string;
   };
 };
 

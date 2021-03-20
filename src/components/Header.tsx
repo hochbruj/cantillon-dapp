@@ -10,8 +10,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useLocation } from "react-router-dom";
 import { ROUTES } from "../config/routes";
 import ThemeButton from "./ThemeButton";
-import { FC } from "react";
+import { FC, useState } from "react";
 import WalletConnectButton from "./WalletConnectButton";
+import WalletButton from "./WalletButton";
+import { useStore } from "../store/store";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -35,6 +37,8 @@ const Header: FC<HeaderProps> = ({ setTheme, theme }) => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
+  const { state } = useStore();
+  const { balances, connectedWeb3 } = state;
 
   return (
     <AppBar position="static">
@@ -55,7 +59,7 @@ const Header: FC<HeaderProps> = ({ setTheme, theme }) => {
         </Typography>
         <img alt="Logo" className={classes.logo} src="/images/Logo.png" />
         <div className={classes.flexGrow} />
-        <WalletConnectButton />
+        {connectedWeb3 && balances ? <WalletButton /> : <WalletConnectButton />}
         <ThemeButton setTheme={setTheme} theme={theme} />
       </Toolbar>
     </AppBar>

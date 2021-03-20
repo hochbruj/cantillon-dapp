@@ -39,7 +39,6 @@ export const useBalances = () => {
       dispatch({ type: "updateBalances", balances });
     }
     if (account) {
-      console.log("calling get balances");
       getBalances();
     }
   }, [account]);
