@@ -22,6 +22,8 @@ import { formatPercentage } from "../utilities/formatters";
 import GetPortfolioModal from "../components/GetPortfolioModal";
 
 import { tokens } from "../config/ethData";
+import { useStore } from "../store/store";
+import WalletConnectButton from "../components/WalletConnectButton";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -73,8 +75,10 @@ interface PortfolioDetailState {
 
 const PortfolioDetail = () => {
   const classes = useStyles();
-  const { state } = useLocation<PortfolioDetailState>();
-  const { portfolio } = state;
+  const location = useLocation<PortfolioDetailState>();
+  const { portfolio } = location.state;
+  const { state } = useStore();
+  const { connectedWeb3, balances } = state;
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
@@ -241,15 +245,36 @@ const PortfolioDetail = () => {
       </Container>
       <Calculator portfolio={portfolio} />
       <Container className={classes.overview} maxWidth="md">
-        <Grid container justify="center">
-          <Button
-            size="large"
-            color="primary"
-            variant="contained"
-            onClick={() => setModalOpen(true)}
-          >
-            Get this portfolio
-          </Button>
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          alignItems="center"
+          spacing={2}
+        >
+          {connectedWeb3 && balances ? (
+            <Grid item xs={12}>
+              <Button
+                size="large"
+                color="primary"
+                variant="contained"
+                onClick={() => setModalOpen(true)}
+              >
+                Get this portfolio
+              </Button>
+            </Grid>
+          ) : (
+            <>
+              <Grid item xs={12}>
+                <Typography>
+                  Please connect a wallet, if you want to get this portfolio{" "}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <WalletConnectButton />
+              </Grid>
+            </>
+          )}
         </Grid>
       </Container>
       <GetPortfolioModal
