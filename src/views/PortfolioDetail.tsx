@@ -253,16 +253,23 @@ const PortfolioDetail = () => {
           spacing={2}
         >
           {connectedWeb3 && balances ? (
-            <Grid item xs={12}>
-              <Button
-                size="large"
-                color="primary"
-                variant="contained"
-                onClick={() => setModalOpen(true)}
-              >
-                Get this portfolio
-              </Button>
-            </Grid>
+            <>
+              <Grid item xs={12}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant="contained"
+                  onClick={() => setModalOpen(true)}
+                >
+                  Get this portfolio
+                </Button>
+              </Grid>
+              <GetPortfolioModal
+                open={modalOpen}
+                setModalOpen={setModalOpen}
+                portfolio={portfolio}
+              />
+            </>
           ) : (
             <>
               <Grid item xs={12}>
@@ -277,11 +284,6 @@ const PortfolioDetail = () => {
           )}
         </Grid>
       </Container>
-      <GetPortfolioModal
-        open={modalOpen}
-        setModalOpen={setModalOpen}
-        portfolio={portfolio}
-      />
     </main>
   );
 };

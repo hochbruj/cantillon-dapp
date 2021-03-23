@@ -18,10 +18,12 @@ import { native } from "../utilities/formatters";
 export const useUniswap = (tradeAmounts: TokenAmounts) => {
   const { state } = useStore();
   const { connectedWeb3 } = state;
-  const [uniswapAmounts, setUniswapAmounts] = useState({} as UniswapAmounts);
+  const [uniswapAmounts, setUniswapAmounts] = useState<UniswapAmounts | null>();
+  const [updateUniswap, setUpdateUniswap] = useState(false);
 
   useEffect(() => {
     async function getUniswap() {
+      let amounts = {} as UniswapAmounts;
       const chainId: ChainId = await connectedWeb3!.web3.eth.net.getId();
       const { network } = connectedWeb3!;
       const assets = Object.keys(tokens).filter(
@@ -53,7 +55,7 @@ export const useUniswap = (tradeAmounts: TokenAmounts) => {
         );
 
         const slippageTolerance = new Percent("50", "10000");
-        uniswapAmounts[token] = {
+        amounts[token] = {
           executionPrice: trade.executionPrice.toSignificant(6),
           amountOutMin: trade
             .minimumAmountOut(slippageTolerance)
@@ -61,12 +63,14 @@ export const useUniswap = (tradeAmounts: TokenAmounts) => {
         };
 
         i++;
-        setUniswapAmounts(uniswapAmounts);
       }
+      setUniswapAmounts(amounts);
     }
-    if (connectedWeb3 && tradeAmounts) {
+    if (updateUniswap) {
+      console.log("calling get uin");
       getUniswap();
+      setUpdateUniswap(false);
     }
-  }, [connectedWeb3, tradeAmounts]);
-  return uniswapAmounts;
+  }, [updateUniswap]);
+  return { uniswapAmounts, setUpdateUniswap };
 };

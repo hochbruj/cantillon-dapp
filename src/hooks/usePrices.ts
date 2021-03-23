@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useStore } from "../store/store";
 import { TokenAmounts } from "../sharedTypes/eth.types";
 import { getPrices } from "../services/getPrices";
 
 export const usePrices = () => {
   const { dispatch } = useStore();
+  const [updatePrices, setUpdatePrices] = useState(false);
 
   useEffect(() => {
     async function updatePrices() {
@@ -12,6 +13,10 @@ export const usePrices = () => {
       prices = await getPrices();
       dispatch({ type: "updatePrices", prices });
     }
-    updatePrices();
-  }, []);
+    if (updatePrices) {
+      updatePrices();
+      setUpdatePrices(false);
+    }
+  }, [updatePrices]);
+  return setUpdatePrices;
 };
