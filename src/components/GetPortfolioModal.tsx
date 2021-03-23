@@ -15,11 +15,13 @@ import {
 import { FC, useEffect, useState } from "react";
 import { Portfolio } from "../sharedTypes/portfolios";
 import { Token, TokenAmounts } from "../sharedTypes/eth.types";
-import { tokens } from "../config/ethData";
+import { contractsAddressesMap, tokens } from "../config/ethData";
 import { useUniswap } from "../hooks/useUniswap";
 import { useStore } from "../store/store";
-import { formatToUsd } from "../utilities/formatters";
+import { formatToUsd, native } from "../utilities/formatters";
 import BigNumber from "bignumber.js";
+import PortfolioBalancerV2 from "../contracts/PortfolioBalancerV2.json";
+import { getGasPrices } from "../services/getGasPrices";
 //import { usePrices } from "../hooks/usePrices";
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +62,9 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
 }) => {
   const classes = useStyles();
   const { state, dispatch } = useStore();
-  const { prices, balances } = state;
+  const { prices, balances, connectedWeb3 } = state;
+  const { web3, account, network } = connectedWeb3!;
+  const [ethFee, setEthFee] = useState<string | null>(null);
   //const setUpdatePrices = usePrices();
 
   const assets = Object.keys(tokens).filter(
@@ -89,6 +93,33 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
     );
   };
 
+  const portfolioBalancer = new web3.eth.Contract(
+    PortfolioBalancerV2.abi as any,
+    contractsAddressesMap[network].PortfolioBalancer
+  );
+
+  const txInput = () => {
+    const tokenAddresses = assets.map(
+      (token) => contractsAddressesMap[network][native(token)]
+    );
+    const inputAmounts = assets.map((token) => tradeAmounts[token]);
+    const minOutAmounts = assets.map(
+      (token) => uniswapAmounts![token].amountOutMinRaw
+    );
+
+    const totalAmountETH = inputAmounts.reduce(
+      (a, b) => Number(a) + Number(b),
+      0
+    );
+
+    return [
+      tokenAddresses,
+      inputAmounts,
+      minOutAmounts,
+      totalAmountETH.toFixed(0),
+    ];
+  };
+
   // const sleep = (ms: number) => {
   //   return new Promise((resolve) => {
   //     setTimeout(resolve, ms);
@@ -106,10 +137,38 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
     setUpdateUniswap(true);
   });
 
+  useEffect(() => {
+    const estimateFees = async () => {
+      const inputs = txInput();
+      try {
+        const gasFeeResults = Promise.all([
+          portfolioBalancer.methods
+            .rebalance(inputs[0], inputs[1], inputs[2])
+            .estimateGas({ from: account, value: inputs[3] }),
+          getGasPrices(),
+        ]);
+        const [gasfee, gasprices] = await gasFeeResults;
+        setEthFee(
+          new BigNumber(gasfee)
+            .times(gasprices.standard)
+            .dividedBy(1e18)
+            .times(prices!.ETH)
+            .toString()
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    if (uniswapAmounts && prices) {
+      estimateFees();
+    }
+  }, [uniswapAmounts, prices]);
+
+  console.log(ethFee);
   return (
     <Dialog open={open} onClose={() => setModalOpen(false)}>
       <DialogTitle id="simple-dialog-title">{`${portfolio.name} portfolio asset purchases`}</DialogTitle>
-      {uniswapAmounts ? (
+      {uniswapAmounts && prices && ethFee ? (
         <>
           <div className={classes.assetAllocation}>
             <Table>
@@ -134,27 +193,21 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                       </div>
                     </TableCell>
                     <TableCell align="right">
-                      {uniswapAmounts[token]
-                        ? uniswapAmounts[token].amountOutMin
-                        : "..."}
+                      {uniswapAmounts[token].amountOutMin}
                     </TableCell>
                     <TableCell>
-                      {uniswapAmounts[token] && prices
-                        ? formatToUsd(
-                            Number(uniswapAmounts[token].amountOutMin) *
-                              Number(prices[token])
-                          )
-                        : "..."}
+                      {formatToUsd(
+                        Number(uniswapAmounts[token].amountOutMin) *
+                          Number(prices[token])
+                      )}
                     </TableCell>
                     <TableCell>
-                      {uniswapAmounts[token] && prices && tradeAmounts
-                        ? slippage(
-                            tradeAmounts[token],
-                            prices.ETH,
-                            uniswapAmounts[token].amountOutMin,
-                            prices[token]
-                          )
-                        : "..."}
+                      {slippage(
+                        tradeAmounts[token],
+                        prices.ETH,
+                        uniswapAmounts[token].amountOutMin,
+                        prices[token]
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -170,7 +223,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" component="h2" align="right">
-                  $100
+                  {formatToUsd(Number(ethFee))}
                 </Typography>
               </Grid>
               <Divider />

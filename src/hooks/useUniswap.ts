@@ -60,6 +60,7 @@ export const useUniswap = (tradeAmounts: TokenAmounts) => {
           amountOutMin: trade
             .minimumAmountOut(slippageTolerance)
             .toSignificant(6),
+          amountOutMinRaw: "0",
         };
 
         i++;
@@ -67,7 +68,6 @@ export const useUniswap = (tradeAmounts: TokenAmounts) => {
       setUniswapAmounts(amounts);
     }
     if (updateUniswap) {
-      console.log("calling get uin");
       getUniswap();
       setUpdateUniswap(false);
     }

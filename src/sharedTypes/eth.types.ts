@@ -30,9 +30,16 @@ export type UniswapAmounts = {
   [key in Token]: {
     amountOutMin: string;
     executionPrice: string;
+    amountOutMinRaw: string;
   };
 };
 
 export type NetworkMap = {
   [key: number]: EthereumNetwork;
 };
+
+export interface GasPrices {
+  slow: number;
+  standard: number;
+  fast: number;
+}
