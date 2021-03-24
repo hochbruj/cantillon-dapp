@@ -10,7 +10,14 @@ export const getPrices = async (): Promise<TokenAmounts> => {
   const url = `${priceUrl}simple/price?ids=${coingeckoIds}&vs_currencies=usd`;
   const result = await axios.get(url);
   for (const token of tokenList) {
-    prices[token] = result.data[tokens[token].coingeckoId]["usd"];
+    //hack for kovan
+    if (token === "ETH") {
+      prices[token] = (
+        result.data[tokens[token].coingeckoId]["usd"] * 100
+      ).toString();
+    } else {
+      prices[token] = result.data[tokens[token].coingeckoId]["usd"];
+    }
   }
   return prices;
 };

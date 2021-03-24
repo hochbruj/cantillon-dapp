@@ -27,7 +27,7 @@ export const useUniswap = (tradeAmounts: TokenAmounts) => {
       const chainId: ChainId = await connectedWeb3!.web3.eth.net.getId();
       const { network } = connectedWeb3!;
       const assets = Object.keys(tokens).filter(
-        (token) => token !== "ETH" && tradeAmounts[token as Token] !== "0"
+        (token) => token !== "ETH" && tradeAmounts[token as Token]
       ) as [Token];
 
       const tokenPromises = Promise.all(

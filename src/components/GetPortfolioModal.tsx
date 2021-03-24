@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import { FC, useEffect, useState } from "react";
 import { Portfolio } from "../sharedTypes/portfolios";
-import { Token, TokenAmounts } from "../sharedTypes/eth.types";
+import { Token, TokenAmounts, UniswapAmounts } from "../sharedTypes/eth.types";
 import { contractsAddressesMap, tokens } from "../config/ethData";
 import { useUniswap } from "../hooks/useUniswap";
 import { useStore } from "../store/store";
@@ -22,6 +22,7 @@ import { formatToUsd, native } from "../utilities/formatters";
 import BigNumber from "bignumber.js";
 import PortfolioBalancerV2 from "../contracts/PortfolioBalancerV2.json";
 import { getGasPrices } from "../services/getGasPrices";
+import { totalUsdBalance } from "../utilities/calculations";
 //import { usePrices } from "../hooks/usePrices";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(2),
   },
+  assetAllolcationTitle: {
+    paddingLeft: theme.spacing(2),
+  },
+
   feeInfo: {
     padding: theme.spacing(4),
   },
@@ -86,11 +91,29 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
     ethPrice: string,
     tokenAmount: string,
     tokenPrice: string
-  ): string => {
-    return formatToUsd(
+  ): number => {
+    return (
       Number(tokenAmount) * Number(tokenPrice) -
-        (Number(ethAmount) / 1e16) * Number(ethPrice)
+      (Number(ethAmount) / 1e18) * Number(ethPrice)
     );
+  };
+
+  const totalSlippage = (
+    tradeAmounts: TokenAmounts,
+    uniswapAmounts: UniswapAmounts,
+    prices: TokenAmounts,
+    ethFee: string
+  ): number => {
+    let coinSlippages = 0;
+    assets.forEach((token) => {
+      coinSlippages += slippage(
+        tradeAmounts[token],
+        prices.ETH,
+        uniswapAmounts[token].amountOutMin,
+        prices[token]
+      );
+    });
+    return coinSlippages - Number(ethFee);
   };
 
   const portfolioBalancer = new web3.eth.Contract(
@@ -151,7 +174,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
         setEthFee(
           new BigNumber(gasfee)
             .times(gasprices.standard)
-            .dividedBy(1e18)
+            .dividedBy(1e20)
             .times(prices!.ETH)
             .toString()
         );
@@ -164,13 +187,17 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
     }
   }, [uniswapAmounts, prices]);
 
-  console.log(ethFee);
   return (
     <Dialog open={open} onClose={() => setModalOpen(false)}>
-      <DialogTitle id="simple-dialog-title">{`${portfolio.name} portfolio asset purchases`}</DialogTitle>
       {uniswapAmounts && prices && ethFee ? (
         <>
+          <DialogTitle id="simple-dialog-title">{`Investment amount: ${formatToUsd(
+            totalUsdBalance(balances!, prices)
+          )}`}</DialogTitle>
           <div className={classes.assetAllocation}>
+            <Typography className={classes.assetAllolcationTitle}>
+              Asset purchases
+            </Typography>
             <Table>
               <TableHead>
                 <TableRow>
@@ -202,11 +229,13 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                       )}
                     </TableCell>
                     <TableCell>
-                      {slippage(
-                        tradeAmounts[token],
-                        prices.ETH,
-                        uniswapAmounts[token].amountOutMin,
-                        prices[token]
+                      {formatToUsd(
+                        slippage(
+                          tradeAmounts[token],
+                          prices.ETH,
+                          uniswapAmounts[token].amountOutMin,
+                          prices[token]
+                        )
                       )}
                     </TableCell>
                   </TableRow>
@@ -234,7 +263,9 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" component="h2" align="right">
-                  $6868 (8.7%)
+                  {formatToUsd(
+                    totalSlippage(tradeAmounts, uniswapAmounts, prices, ethFee)
+                  )}
                 </Typography>
               </Grid>
             </Grid>
