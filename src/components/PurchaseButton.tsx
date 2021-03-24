@@ -9,6 +9,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useStore, ConnectedWeb3 } from "../store/store";
 import { networks } from "../config/ethData";
 
+interface PurchaseButtonProps {
+  txInput: any;
+  portfolioBalancer: any;
+}
+
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     margin: theme.spacing(1),
@@ -24,65 +29,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const providerOptions = {
-  walletconnect: {
-    package: WalletConnectProvider,
-    options: {
-      infuraId: process.env.REACT_APP_INFURA_ID,
-    },
-  },
-  fortmatic: {
-    package: Fortmatic,
-    options: {
-      key: process.env.REACT_APP_FORTMATIC_ID,
-    },
-  },
-  portis: {
-    package: Portis,
-    options: {
-      id: process.env.REACT_APP_PORTIS_ID,
-    },
-  },
-};
-
-const web3ModalOptions = {
-  cacheProvider: false,
-  providerOptions,
-};
-
-const web3ModalInstance = new Web3Modal(web3ModalOptions);
-
-const WalletConnectButton: FC = () => {
+const PurchaseButton: FC<PurchaseButtonProps> = ({
+  txInput,
+  portfolioBalancer,
+}) => {
   const classes = useStyles();
   const { state, dispatch } = useStore();
-  const { balances } = state;
+  const { connectedWeb3 } = state;
   const [open, setOpen] = useState<boolean>(false);
   const anchorRef = useRef<HTMLAnchorElement>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (balances) {
-      setLoading(false);
-    }
-  }, [balances]);
-
-  const connetWallet = async () => {
+  const purchaseAssets = async () => {
     setLoading(true);
     try {
-      const provider = await web3ModalInstance.connect();
-      const web3 = new Web3(provider);
-      const accounts = await web3.eth.getAccounts();
-      const account = accounts[0];
-      const networkId = await web3.eth.net.getId();
-      const wallet = "Metamask";
-      const connectedWeb3: ConnectedWeb3 = {
-        web3,
-        account,
-        network: networks[networkId],
-        wallet,
-      };
-      dispatch({ type: "connectWeb3", connectedWeb3 });
-      setOpen(false);
+      const result = portfolioBalancer.methods
+        .rebalance(txInput[0], txInput[1], txInput[2])
+        .send({ from: connectedWeb3!.account, value: txInput[3] });
+      setLoading(false);
     } catch (e) {
       setLoading(false);
     }
@@ -93,10 +57,10 @@ const WalletConnectButton: FC = () => {
       <Button
         variant="contained"
         color="secondary"
-        onClick={connetWallet}
+        onClick={purchaseAssets}
         disabled={loading}
       >
-        Connect Wallet
+        Purchase assets
       </Button>
       {loading && (
         <CircularProgress size={24} className={classes.buttonProgress} />
@@ -105,4 +69,4 @@ const WalletConnectButton: FC = () => {
   );
 };
 
-export default WalletConnectButton;
+export default PurchaseButton;

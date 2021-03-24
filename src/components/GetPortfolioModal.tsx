@@ -11,6 +11,7 @@ import {
   Grid,
   Divider,
   CircularProgress,
+  Button,
 } from "@material-ui/core";
 import { FC, useEffect, useState } from "react";
 import { Portfolio } from "../sharedTypes/portfolios";
@@ -23,6 +24,7 @@ import BigNumber from "bignumber.js";
 import PortfolioBalancerV2 from "../contracts/PortfolioBalancerV2.json";
 import { getGasPrices } from "../services/getGasPrices";
 import { totalUsdBalance } from "../utilities/calculations";
+import PurchaseButton from "./PurchaseButton";
 //import { usePrices } from "../hooks/usePrices";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   feeInfo: {
-    padding: theme.spacing(4),
+    padding: theme.spacing(2, 4, 2, 4),
   },
   tokenContainer: {
     display: "flex",
@@ -267,6 +269,22 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                     totalSlippage(tradeAmounts, uniswapAmounts, prices, ethFee)
                   )}
                 </Typography>
+              </Grid>
+            </Grid>
+          </div>
+          <div className={classes.assetAllocation}>
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={12}>
+                <PurchaseButton
+                  txInput={txInput()}
+                  portfolioBalancer={portfolioBalancer}
+                />
               </Grid>
             </Grid>
           </div>
