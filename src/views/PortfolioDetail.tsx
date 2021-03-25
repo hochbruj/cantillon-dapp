@@ -22,7 +22,7 @@ import { formatPercentage } from "../utilities/formatters";
 import GetPortfolioModal from "../components/GetPortfolioModal";
 
 import { tokens } from "../config/ethData";
-import { useStore } from "../store/store";
+import { Message, useStore } from "../store/store";
 import WalletConnectButton from "../components/WalletConnectButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -77,13 +77,26 @@ const PortfolioDetail = () => {
   const classes = useStyles();
   const location = useLocation<PortfolioDetailState>();
   const { portfolio } = location.state;
-  const { state } = useStore();
+  const { state, dispatch } = useStore();
   const { connectedWeb3, balances } = state;
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handeleGetPortfolio = () => {
+    if (balances?.ETH === "0") {
+      const message = {
+        type: "error",
+        text:
+          "Youn need to fund your wallet with ETH before you can get this portfolio",
+      } as Message;
+      dispatch({ type: "updateMessage", message });
+    } else {
+      setModalOpen(true);
+    }
+  };
 
   return (
     <main>
@@ -259,7 +272,7 @@ const PortfolioDetail = () => {
                   size="large"
                   color="primary"
                   variant="contained"
-                  onClick={() => setModalOpen(true)}
+                  onClick={handeleGetPortfolio}
                 >
                   Get this portfolio
                 </Button>

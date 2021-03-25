@@ -7,6 +7,7 @@ interface State {
   connectedWeb3: ConnectedWeb3 | null;
   balances: TokenAmounts | null;
   prices: TokenAmounts | null;
+  message: Message | null;
 }
 
 export interface ConnectedWeb3 {
@@ -16,17 +17,26 @@ export interface ConnectedWeb3 {
   wallet: string;
 }
 
+type MessageType = "error" | "warning" | "info" | "success";
+
+export interface Message {
+  type: MessageType;
+  text: string;
+}
+
 type Action =
   | { type: "connectWeb3"; connectedWeb3: ConnectedWeb3 }
   | { type: "disconnectWeb3" }
   | { type: "updateBalances"; balances: TokenAmounts }
   | { type: "updateAccount"; account: string }
-  | { type: "updatePrices"; prices: TokenAmounts };
+  | { type: "updatePrices"; prices: TokenAmounts }
+  | { type: "updateMessage"; message: Message | null };
 
 const initialState: State = {
   connectedWeb3: null,
   balances: null,
   prices: null,
+  message: null,
 };
 
 type StoreContextType = {
@@ -62,6 +72,11 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         prices: action.prices,
+      };
+    case "updateMessage":
+      return {
+        ...state,
+        message: action.message,
       };
   }
 };

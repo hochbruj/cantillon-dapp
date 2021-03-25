@@ -10,6 +10,7 @@ import { getPortfolios } from "./services/getPortfolios";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { StoreProvider } from "./store/store";
 import Web3Data from "./components/Web3Data";
+import Message from "./components/Message";
 
 const browserHistory = createBrowserHistory();
 
@@ -38,6 +39,7 @@ export default function App() {
           <Router history={browserHistory}>
             <Header setTheme={setTheme} theme={theme} />
             <Routes portfolios={portfolios} />
+            <Message />
             <Footer />
           </Router>
         </StoreProvider>
