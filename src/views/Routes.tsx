@@ -5,6 +5,7 @@ import PortfolioDetail from "./PortfolioDetail";
 import Portfolios from "./Portfolios";
 import { ROUTES } from "../config/routes";
 import { Portfolio } from "../sharedTypes/portfolios";
+import Dashboard from "./Dashboard";
 
 interface RouteProps {
   portfolios: Portfolio[] | null;
@@ -14,6 +15,9 @@ const Routes: FC<RouteProps> = ({ portfolios }) => {
   return (
     <Switch>
       <Redirect exact from="/" to="/portfolios" />
+      <Route path={ROUTES.DASHBOARD} exact>
+        <Dashboard />
+      </Route>
       <Route path={ROUTES.PORTFOLIO} exact>
         <PortfolioDetail />
       </Route>

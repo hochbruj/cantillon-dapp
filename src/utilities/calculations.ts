@@ -17,3 +17,9 @@ export const totalUsdBalance = (
   });
   return totalAmount.toNumber();
 };
+
+export const normalized = (value: string, token: Token): string => {
+  return new BigNumber(value)
+    .dividedBy(10 ** tokens[token].decimals)
+    .toFixed(4);
+};
