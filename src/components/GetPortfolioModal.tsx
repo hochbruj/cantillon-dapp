@@ -25,6 +25,7 @@ import PortfolioBalancerV2 from "../contracts/PortfolioBalancerV2.json";
 import { getGasPrices } from "../services/getGasPrices";
 import { totalUsdBalance } from "../utilities/calculations";
 import PurchaseButton from "./PurchaseButton";
+import { useHistory } from "react-router-dom";
 //import { usePrices } from "../hooks/usePrices";
 
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +69,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
   portfolio,
 }) => {
   const classes = useStyles();
-  const { state, dispatch } = useStore();
+  const { state } = useStore();
   const { prices, balances, connectedWeb3 } = state;
   const { web3, account, network } = connectedWeb3!;
   const [ethFee, setEthFee] = useState<string | null>(null);

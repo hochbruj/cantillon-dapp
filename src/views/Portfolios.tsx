@@ -13,8 +13,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Portfolio } from "../sharedTypes/portfolios";
 import { formatPercentage } from "../utilities/formatters";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { ROUTES } from "../config/routes";
+import { useStore } from "../store/store";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,6 +65,9 @@ interface CardsRaised {
 
 const Portfolios: FC<PortfoliosProps> = ({ portfolios }) => {
   const classes = useStyles();
+  const history = useHistory();
+  const { state } = useStore();
+  const { balances } = state;
 
   const [cardStates, setCardState] = useState<CardsRaised | null>(null);
 
@@ -79,6 +83,13 @@ const Portfolios: FC<PortfoliosProps> = ({ portfolios }) => {
       setCardState(initialCardStates);
     }
   }, [portfolios]);
+
+  useEffect(() => {
+    //hack unitl we get more user info from firebase
+    if (balances && balances.aUSDC !== "0") {
+      history.push(ROUTES.DASHBOARD);
+    }
+  });
 
   return (
     <main>

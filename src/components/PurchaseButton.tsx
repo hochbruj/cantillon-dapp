@@ -1,13 +1,11 @@
 import { FC, useState, useEffect, useRef } from "react";
 import { Button, CircularProgress } from "@material-ui/core";
-import Web3Modal from "web3modal";
-import Web3 from "web3";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import Fortmatic from "fortmatic";
-import Portis from "@portis/web3";
 import { makeStyles } from "@material-ui/core/styles";
-import { useStore, ConnectedWeb3 } from "../store/store";
+import { useStore, ConnectedWeb3, Message } from "../store/store";
 import { networks } from "../config/ethData";
+import { useBalances } from "../hooks/useBalances";
+import { useHistory } from "react-router-dom";
+import { ROUTES } from "../config/routes";
 
 interface PurchaseButtonProps {
   txInput: any;
@@ -36,16 +34,28 @@ const PurchaseButton: FC<PurchaseButtonProps> = ({
   const classes = useStyles();
   const { state, dispatch } = useStore();
   const { connectedWeb3 } = state;
-  const [open, setOpen] = useState<boolean>(false);
-  const anchorRef = useRef<HTMLAnchorElement>(null);
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
+  const setUpdateBalance = useBalances();
 
   const purchaseAssets = async () => {
     setLoading(true);
     try {
-      const result = portfolioBalancer.methods
+      const result = await portfolioBalancer.methods
         .rebalance(txInput[0], txInput[1], txInput[2])
-        .send({ from: connectedWeb3!.account, value: txInput[3] });
+        .send({
+          from: connectedWeb3!.account,
+          value: txInput[3],
+          gas: "700000",
+          gasPrice: "1000000000",
+        });
+      setUpdateBalance(true);
+      const message = {
+        type: "success",
+        text: "Congratulation! You successfully purchased the portfolio!",
+      } as Message;
+      dispatch({ type: "updateMessage", message });
+      history.push(ROUTES.DASHBOARD);
       setLoading(false);
     } catch (e) {
       setLoading(false);

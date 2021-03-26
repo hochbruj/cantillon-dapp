@@ -13,13 +13,13 @@ const Web3Data: FC = () => {
     setUpdatePrices(true);
   }, []);
 
+  useBalances();
+
   window.ethereum.on("accountsChanged", function (accounts: any) {
     if (connectedWeb3 && connectedWeb3.account !== accounts[0]) {
       dispatch({ type: "updateAccount", account: accounts[0] });
     }
   });
-
-  useBalances();
 
   console.log("state", state);
 

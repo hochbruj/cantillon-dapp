@@ -56,7 +56,6 @@ const WalletConnectButton: FC = () => {
   const classes = useStyles();
   const { state, dispatch } = useStore();
   const { balances } = state;
-  const [open, setOpen] = useState<boolean>(false);
   const anchorRef = useRef<HTMLAnchorElement>(null);
   const [loading, setLoading] = useState(false);
 
@@ -82,7 +81,6 @@ const WalletConnectButton: FC = () => {
         wallet,
       };
       dispatch({ type: "connectWeb3", connectedWeb3 });
-      setOpen(false);
     } catch (e) {
       setLoading(false);
     }
