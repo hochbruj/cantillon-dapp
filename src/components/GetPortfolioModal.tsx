@@ -19,7 +19,7 @@ import { Token, TokenAmounts, UniswapAmounts } from "../sharedTypes/eth.types";
 import { contractsAddressesMap, tokens } from "../config/ethData";
 import { useUniswap } from "../hooks/useUniswap";
 import { useStore } from "../store/store";
-import { formatToUsd, native } from "../utilities/formatters";
+import { formatPercentage, formatToUsd, native } from "../utilities/formatters";
 import BigNumber from "bignumber.js";
 import PortfolioBalancerV2 from "../contracts/PortfolioBalancerV2.json";
 import { getGasPrices } from "../services/getGasPrices";
@@ -134,15 +134,15 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
     );
 
     const totalAmountETH = inputAmounts.reduce(
-      (a, b) => Number(a) + Number(b),
-      0
+      (a, b) => a.plus(b),
+      new BigNumber(0)
     );
 
     return [
       tokenAddresses,
       inputAmounts,
       minOutAmounts,
-      totalAmountETH.toFixed(0),
+      totalAmountETH.toString(),
     ];
   };
 
@@ -166,6 +166,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
   useEffect(() => {
     const estimateFees = async () => {
       const inputs = txInput();
+      console.log("input", inputs);
       try {
         const gasFeeResults = Promise.all([
           portfolioBalancer.methods
@@ -225,13 +226,13 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                     <TableCell align="right">
                       {uniswapAmounts[token].amountOutMin}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="right">
                       {formatToUsd(
                         Number(uniswapAmounts[token].amountOutMin) *
                           Number(prices[token])
                       )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="right">
                       {formatToUsd(
                         slippage(
                           tradeAmounts[token],
@@ -269,6 +270,16 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                   {formatToUsd(
                     totalSlippage(tradeAmounts, uniswapAmounts, prices, ethFee)
                   )}
+                  (
+                  {formatPercentage(
+                    totalSlippage(
+                      tradeAmounts,
+                      uniswapAmounts,
+                      prices,
+                      ethFee
+                    ) / totalUsdBalance(balances!, prices)
+                  )}
+                  )
                 </Typography>
               </Grid>
             </Grid>

@@ -47,7 +47,7 @@ export const useBalances = (account: string) => {
   }, [updateBalance]);
 
   useEffect(() => {
-    if (account) {
+    if (account && connectedWeb3) {
       getBalances();
     }
   }, [account]);

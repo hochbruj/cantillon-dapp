@@ -29,7 +29,7 @@ export interface Message {
 type Action =
   | { type: "connectWeb3"; connectedWeb3: ConnectedWeb3 }
   | { type: "disconnectWeb3" }
-  | { type: "updateBalances"; balances: TokenAmounts }
+  | { type: "updateBalances"; balances: TokenAmounts | null }
   | { type: "updateAccount"; account: string }
   | { type: "updatePrices"; prices: TokenAmounts }
   | { type: "updateMessage"; message: Message | null }

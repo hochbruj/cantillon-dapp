@@ -56,6 +56,7 @@ const WalletButton: FC = () => {
 
   const disconnectWallet = () => {
     dispatch({ type: "disconnectWeb3" });
+    dispatch({ type: "updateBalances", balances: null });
   };
 
   // return focus to the button when we transitioned from !open -> open
