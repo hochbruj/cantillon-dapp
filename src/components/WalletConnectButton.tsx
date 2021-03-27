@@ -8,6 +8,7 @@ import Portis from "@portis/web3";
 import { makeStyles } from "@material-ui/core/styles";
 import { useStore, ConnectedWeb3 } from "../store/store";
 import { networks } from "../config/ethData";
+import { useBalances } from "../hooks/useBalances";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -56,8 +57,8 @@ const WalletConnectButton: FC = () => {
   const classes = useStyles();
   const { state, dispatch } = useStore();
   const { balances } = state;
-  const anchorRef = useRef<HTMLAnchorElement>(null);
   const [loading, setLoading] = useState(false);
+  const [account, setAccount] = useState<string>("");
 
   useEffect(() => {
     if (balances) {
@@ -81,10 +82,13 @@ const WalletConnectButton: FC = () => {
         wallet,
       };
       dispatch({ type: "connectWeb3", connectedWeb3 });
+      setAccount(account);
     } catch (e) {
       setLoading(false);
     }
   };
+
+  useBalances(account);
 
   return (
     <div className={classes.wrapper}>

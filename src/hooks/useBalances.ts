@@ -4,11 +4,10 @@ import { tokens, contractsAddressesMap } from "../config/ethData";
 import { TokenAmounts, Token } from "../sharedTypes/eth.types";
 import ERC20 from "../contracts/ERC20.json";
 
-export const useBalances = () => {
+export const useBalances = (account: string) => {
   const { state, dispatch } = useStore();
   const { connectedWeb3 } = state;
   const [updateBalance, setUpdateBalance] = useState(false);
-  const account = connectedWeb3! && connectedWeb3.account;
 
   const getBalances = async () => {
     const { web3, network } = connectedWeb3!;
@@ -41,14 +40,14 @@ export const useBalances = () => {
 
   useEffect(() => {
     if (updateBalance) {
-      console.log("getting balances");
+      console.log("calling b inside update balances");
       getBalances();
       setUpdateBalance(false);
     }
   }, [updateBalance]);
 
   useEffect(() => {
-    if (connectedWeb3) {
+    if (account) {
       getBalances();
     }
   }, [account]);

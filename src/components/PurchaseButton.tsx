@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useRef } from "react";
 import { Button, CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { useStore, ConnectedWeb3, Message } from "../store/store";
+import { useStore, Message } from "../store/store";
 import { networks } from "../config/ethData";
 import { useBalances } from "../hooks/useBalances";
 import { useHistory } from "react-router-dom";
@@ -36,7 +36,7 @@ const PurchaseButton: FC<PurchaseButtonProps> = ({
   const { connectedWeb3 } = state;
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const setUpdateBalance = useBalances();
+  const setUpdateBalance = useBalances(connectedWeb3!.account);
 
   const purchaseAssets = async () => {
     setLoading(true);
