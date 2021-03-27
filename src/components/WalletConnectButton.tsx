@@ -6,7 +6,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import Fortmatic from "fortmatic";
 import Portis from "@portis/web3";
 import { makeStyles } from "@material-ui/core/styles";
-import { useStore, ConnectedWeb3 } from "../store/store";
+import { useStore, ConnectedWeb3, Message } from "../store/store";
 import { networks } from "../config/ethData";
 import { useBalances } from "../hooks/useBalances";
 
@@ -81,8 +81,18 @@ const WalletConnectButton: FC = () => {
         network: networks[networkId],
         wallet,
       };
-      dispatch({ type: "connectWeb3", connectedWeb3 });
-      setAccount(account);
+      //check for network
+      if (networks[networkId] != process.env.REACT_APP_ETHEREUM_NETWORK) {
+        const message: Message = {
+          type: "error",
+          text: `Wrong network! Please change your wallet to ${process.env.REACT_APP_ETHEREUM_NETWORK} network.`,
+        };
+        dispatch({ type: "updateMessage", message });
+        setLoading(false);
+      } else {
+        dispatch({ type: "connectWeb3", connectedWeb3 });
+        setAccount(account);
+      }
     } catch (e) {
       setLoading(false);
     }

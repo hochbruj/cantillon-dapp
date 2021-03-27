@@ -52,7 +52,8 @@ const PurchaseButton: FC<PurchaseButtonProps> = ({
       setUpdateBalance(true);
       const message = {
         type: "success",
-        text: "Congratulation! You successfully purchased the portfolio!",
+        text:
+          "Congratulation! You successfully purchased the portfolio! It might take a few seconsd to update your assets.",
       } as Message;
       dispatch({ type: "updateMessage", message });
       history.push(ROUTES.DASHBOARD);
