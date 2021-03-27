@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Card,
@@ -55,19 +55,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface PortfoliosProps {
-  portfolios: Portfolio[] | null;
-}
-
 interface CardsRaised {
   [key: string]: boolean;
 }
 
-const Portfolios: FC<PortfoliosProps> = ({ portfolios }) => {
+const Portfolios = () => {
   const classes = useStyles();
   const history = useHistory();
   const { state } = useStore();
-  const { balances } = state;
+  const { portfolios, balances, connectedWeb3 } = state;
 
   const [cardStates, setCardState] = useState<CardsRaised | null>(null);
 
@@ -86,7 +82,7 @@ const Portfolios: FC<PortfoliosProps> = ({ portfolios }) => {
 
   useEffect(() => {
     //hack unitl we get more user info from firebase
-    if (balances && balances.aUSDC !== "0") {
+    if (connectedWeb3 && balances && balances.aUSDC !== "0") {
       history.push(ROUTES.DASHBOARD);
     }
   });

@@ -24,12 +24,12 @@ export default function App() {
     },
   });
 
-  useEffect(() => {
-    const loadPortfolios = async () => {
-      setPortfolios(await getPortfolios());
-    };
-    loadPortfolios();
-  }, []);
+  // useEffect(() => {
+  //   const loadPortfolios = async () => {
+  //     setPortfolios(await getPortfolios());
+  //   };
+  //   loadPortfolios();
+  // }, []);
   return (
     <React.Fragment>
       <ThemeProvider theme={muiTheme}>
@@ -38,7 +38,7 @@ export default function App() {
           <Web3Data />
           <Router history={browserHistory}>
             <Header setTheme={setTheme} theme={theme} />
-            <Routes portfolios={portfolios} />
+            <Routes />
             <Message />
             <Footer />
           </Router>

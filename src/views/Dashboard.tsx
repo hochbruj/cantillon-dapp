@@ -8,7 +8,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Portfolio } from "../sharedTypes/portfolios";
 import { formatPercentage, formatToUsd } from "../utilities/formatters";
-import { Link } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { ROUTES } from "../config/routes";
 import AssetTable from "../components/AssetTable";
 import { useStore } from "../store/store";
@@ -29,6 +29,10 @@ const Dashboard: FC = () => {
   const classes = useStyles();
   const { state } = useStore();
   const { balances, connectedWeb3, prices } = state;
+
+  if (!connectedWeb3) {
+    return <Redirect to={ROUTES.PORTFOLIOS} />;
+  }
 
   return (
     <main>

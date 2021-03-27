@@ -2,12 +2,14 @@
 import React, { FC, createContext, useContext, useReducer } from "react";
 import Web3 from "web3";
 import { TokenAmounts, EthereumNetwork } from "../sharedTypes/eth.types";
+import { Portfolio } from "../sharedTypes/portfolios";
 
 interface State {
   connectedWeb3: ConnectedWeb3 | null;
   balances: TokenAmounts | null;
   prices: TokenAmounts | null;
   message: Message | null;
+  portfolios: Portfolio[] | null;
 }
 
 export interface ConnectedWeb3 {
@@ -30,13 +32,15 @@ type Action =
   | { type: "updateBalances"; balances: TokenAmounts }
   | { type: "updateAccount"; account: string }
   | { type: "updatePrices"; prices: TokenAmounts }
-  | { type: "updateMessage"; message: Message | null };
+  | { type: "updateMessage"; message: Message | null }
+  | { type: "loadPortfolios"; portfolios: Portfolio[] };
 
 const initialState: State = {
   connectedWeb3: null,
   balances: null,
   prices: null,
   message: null,
+  portfolios: null,
 };
 
 type StoreContextType = {
@@ -77,6 +81,11 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         message: action.message,
+      };
+    case "loadPortfolios":
+      return {
+        ...state,
+        portfolios: action.portfolios,
       };
   }
 };
