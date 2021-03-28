@@ -55,6 +55,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: theme.spacing(10),
   },
+  positive: {
+    color: "#1cc760;",
+  },
+  negative: {
+    color: "#ff5050;",
+  },
 }));
 
 interface GetPortfolioModalProps {
@@ -116,7 +122,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
         prices[token]
       );
     });
-    return coinSlippages - Number(ethFee);
+    return coinSlippages + Number(ethFee);
   };
 
   const portfolioBalancer = new web3.eth.Contract(
@@ -180,6 +186,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
             .times(gasprices.standard)
             .dividedBy(1e20)
             .times(prices!.ETH)
+            .times(-1)
             .toString()
         );
       } catch (e) {
@@ -233,14 +240,28 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                       )}
                     </TableCell>
                     <TableCell align="right">
-                      {formatToUsd(
-                        slippage(
-                          tradeAmounts[token],
-                          prices.ETH,
-                          uniswapAmounts[token].amountOutMin,
-                          prices[token]
-                        )
-                      )}
+                      <div
+                        className={
+                          slippage(
+                            tradeAmounts[token],
+                            prices.ETH,
+                            uniswapAmounts[token].amountOutMin,
+                            prices[token]
+                          ) >= 0
+                            ? classes.positive
+                            : classes.negative
+                        }
+                      >
+                        {formatToUsd(
+                          slippage(
+                            tradeAmounts[token],
+                            prices.ETH,
+                            uniswapAmounts[token].amountOutMin,
+                            prices[token]
+                          ),
+                          "exceptZero"
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -255,7 +276,12 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography variant="body1" component="h2" align="right">
+                <Typography
+                  variant="body1"
+                  component="h2"
+                  align="right"
+                  className={classes.negative}
+                >
                   {formatToUsd(Number(ethFee))}
                 </Typography>
               </Grid>
@@ -266,7 +292,21 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography variant="body1" component="h2" align="right">
+                <Typography
+                  variant="body1"
+                  component="h2"
+                  align="right"
+                  className={
+                    totalSlippage(
+                      tradeAmounts,
+                      uniswapAmounts,
+                      prices,
+                      ethFee
+                    ) >= 0
+                      ? classes.positive
+                      : classes.negative
+                  }
+                >
                   {formatToUsd(
                     totalSlippage(tradeAmounts, uniswapAmounts, prices, ethFee)
                   )}

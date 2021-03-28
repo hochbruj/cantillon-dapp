@@ -1,7 +1,7 @@
 import { Token } from "../sharedTypes/eth.types";
 
 export const formatPercentage = (value: number): string => {
-  return (value * 100).toFixed(1) + "%";
+  return Math.abs(value * 100).toFixed(1) + "%";
 };
 
 export const formatAmount = (value: number): string => {
@@ -25,12 +25,17 @@ export const abbreviateAddress = (address: string): string => {
   )}`;
 };
 
-export const formatToUsd = (value: number, maximumFractionDigits = 2): string =>
+export const formatToUsd = (
+  value: number,
+  signDisplay = "auto",
+  maximumFractionDigits = 2
+): string =>
   new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits,
+    signDisplay,
   }).format(value);
 
 export const native = (token: Token): Token => {
