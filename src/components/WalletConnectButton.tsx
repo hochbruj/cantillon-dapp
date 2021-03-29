@@ -85,7 +85,7 @@ const WalletConnectButton: FC = () => {
       if (networks[networkId] != process.env.REACT_APP_ETHEREUM_NETWORK) {
         const message: Message = {
           type: "error",
-          text: `Wrong network! Please change your wallet to ${process.env.REACT_APP_ETHEREUM_NETWORK} network.`,
+          text: `Wrong network! Please change your wallet to Kovan Test Network.`,
         };
         dispatch({ type: "updateMessage", message });
         setLoading(false);

@@ -86,6 +86,7 @@ const PortfolioDetail = () => {
   }, []);
 
   const handeleGetPortfolio = () => {
+    console.log(balances?.ETH);
     if (balances?.ETH === "0") {
       const message = {
         type: "error",
@@ -277,11 +278,13 @@ const PortfolioDetail = () => {
                   Get this portfolio
                 </Button>
               </Grid>
-              <GetPortfolioModal
-                open={modalOpen}
-                setModalOpen={setModalOpen}
-                portfolio={portfolio}
-              />
+              {balances.ETH !== "0" && (
+                <GetPortfolioModal
+                  open={modalOpen}
+                  setModalOpen={setModalOpen}
+                  portfolio={portfolio}
+                />
+              )}
             </>
           ) : (
             <>

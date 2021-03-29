@@ -8,17 +8,17 @@ export const useBalances = (account: string) => {
   const { state, dispatch } = useStore();
   const { connectedWeb3 } = state;
   const [updateBalance, setUpdateBalance] = useState(false);
+  const { web3, network } = connectedWeb3 || {};
 
   const getBalances = async () => {
-    const { web3, network } = connectedWeb3!;
     const erc20TokenList = Object.keys(tokens).filter(
       (token) => token !== "ETH"
     ) as [Token];
     const erc20Contracts = erc20TokenList.map(
       (token) =>
-        new web3.eth.Contract(
+        new web3!.eth.Contract(
           ERC20.abi as any,
-          contractsAddressesMap[network][token]
+          contractsAddressesMap[network!][token]
         )
     );
     const balancPromises = Promise.all(
@@ -34,7 +34,7 @@ export const useBalances = (account: string) => {
       balances[token] = balanceResults[i];
       i++;
     }
-    balances.ETH = await web3.eth.getBalance(account!);
+    balances.ETH = await web3!.eth.getBalance(account!);
     dispatch({ type: "updateBalances", balances });
   };
 
@@ -47,7 +47,7 @@ export const useBalances = (account: string) => {
   }, [updateBalance]);
 
   useEffect(() => {
-    if (account && connectedWeb3) {
+    if (account && web3 && network) {
       getBalances();
     }
   }, [account]);
