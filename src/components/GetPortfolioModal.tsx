@@ -25,7 +25,7 @@ import PortfolioBalancerV2 from "../contracts/PortfolioBalancerV2.json";
 import { getGasPrices } from "../services/getGasPrices";
 import { totalUsdBalance } from "../utilities/calculations";
 import PurchaseButton from "./PurchaseButton";
-import { useHistory } from "react-router-dom";
+import Help from "./Help";
 //import { usePrices } from "../hooks/usePrices";
 
 const useStyles = makeStyles((theme) => ({
@@ -202,9 +202,18 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
     <Dialog open={open} onClose={() => setModalOpen(false)}>
       {uniswapAmounts && prices && ethFee ? (
         <>
-          <DialogTitle id="simple-dialog-title">{`Investment amount: ${formatToUsd(
-            totalUsdBalance(balances!, prices)
-          )}`}</DialogTitle>
+          <DialogTitle id="simple-dialog-title">
+            <Grid container direction="row" alignContent="flex-start">
+              <Grid item>
+                {`Investment amount: ${formatToUsd(
+                  totalUsdBalance(balances!, prices)
+                )}`}
+              </Grid>
+              <Grid item>
+                <Help />
+              </Grid>
+            </Grid>
+          </DialogTitle>
           <div className={classes.assetAllocation}>
             <Typography className={classes.assetAllolcationTitle}>
               Asset purchases
