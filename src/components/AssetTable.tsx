@@ -19,7 +19,11 @@ import {
 import { useStore } from "../store/store";
 import { Token } from "../sharedTypes/eth.types";
 import { tokens } from "../config/ethData";
-import { normalized, totalUsdBalance } from "../utilities/calculations";
+import {
+  currentPrice,
+  normalized,
+  totalUsdBalance,
+} from "../utilities/calculations";
 import { formatPercentage, formatToUsd } from "../utilities/formatters";
 
 const useStyles = makeStyles((theme) => ({
@@ -86,13 +90,13 @@ const AssetTable = () => {
                 <TableCell align="right">
                   {formatToUsd(
                     Number(normalized(balances![token], token)) *
-                      Number(prices![token])
+                      currentPrice(prices!, token)
                   )}
                 </TableCell>
                 <TableCell align="right">
                   {formatPercentage(
                     (Number(normalized(balances![token], token)) *
-                      Number(prices![token])) /
+                      currentPrice(prices!, token)) /
                       totalUsdAmount
                   )}
                 </TableCell>

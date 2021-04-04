@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../store/store";
-import { TokenAmounts } from "../sharedTypes/eth.types";
-import { getPrices } from "../services/getPrices";
+import { getHistoricalPrices } from "../services/getPrices";
 
 export const usePrices = () => {
   const { dispatch } = useStore();
@@ -9,8 +8,9 @@ export const usePrices = () => {
 
   useEffect(() => {
     async function updatePrices() {
-      let prices = {} as TokenAmounts;
-      prices = await getPrices();
+      //const prices = await getPrices();
+      const prices = await getHistoricalPrices();
+
       dispatch({ type: "updatePrices", prices });
     }
     if (updatePrices) {

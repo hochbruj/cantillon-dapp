@@ -34,6 +34,10 @@ export type UniswapAmounts = {
   };
 };
 
+export type HistorcialPrices = {
+  [key in Token]: number[];
+};
+
 export type NetworkMap = {
   [key: number]: EthereumNetwork;
 };

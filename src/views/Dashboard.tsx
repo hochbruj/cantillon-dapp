@@ -12,7 +12,7 @@ import { Redirect, useHistory } from "react-router-dom";
 import { ROUTES } from "../config/routes";
 import AssetTable from "../components/AssetTable";
 import { useStore } from "../store/store";
-import { totalUsdBalance } from "../utilities/calculations";
+import { dailyDelta, totalUsdBalance } from "../utilities/calculations";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +29,8 @@ const Dashboard: FC = () => {
   const classes = useStyles();
   const { state } = useStore();
   const { balances, connectedWeb3, prices } = state;
+
+  console.log(dailyDelta(balances!, prices!));
 
   if (!connectedWeb3) {
     return <Redirect to={ROUTES.PORTFOLIOS} />;

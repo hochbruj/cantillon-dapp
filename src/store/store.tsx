@@ -1,13 +1,17 @@
 // store.js
 import React, { FC, createContext, useContext, useReducer } from "react";
 import Web3 from "web3";
-import { TokenAmounts, EthereumNetwork } from "../sharedTypes/eth.types";
+import {
+  TokenAmounts,
+  EthereumNetwork,
+  HistorcialPrices,
+} from "../sharedTypes/eth.types";
 import { Portfolio } from "../sharedTypes/portfolios";
 
 interface State {
   connectedWeb3: ConnectedWeb3 | null;
   balances: TokenAmounts | null;
-  prices: TokenAmounts | null;
+  prices: HistorcialPrices | null;
   message: Message | null;
   portfolios: Portfolio[] | null;
 }
@@ -31,7 +35,7 @@ type Action =
   | { type: "disconnectWeb3" }
   | { type: "updateBalances"; balances: TokenAmounts | null }
   | { type: "updateAccount"; account: string }
-  | { type: "updatePrices"; prices: TokenAmounts }
+  | { type: "updatePrices"; prices: HistorcialPrices }
   | { type: "updateMessage"; message: Message | null }
   | { type: "loadPortfolios"; portfolios: Portfolio[] };
 

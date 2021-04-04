@@ -11,11 +11,15 @@ import {
   Grid,
   Divider,
   CircularProgress,
-  Button,
 } from "@material-ui/core";
 import { FC, useEffect, useState } from "react";
 import { Portfolio } from "../sharedTypes/portfolios";
-import { Token, TokenAmounts, UniswapAmounts } from "../sharedTypes/eth.types";
+import {
+  HistorcialPrices,
+  Token,
+  TokenAmounts,
+  UniswapAmounts,
+} from "../sharedTypes/eth.types";
 import { contractsAddressesMap, tokens } from "../config/ethData";
 import { useUniswap } from "../hooks/useUniswap";
 import { useStore } from "../store/store";
@@ -23,7 +27,7 @@ import { formatPercentage, formatToUsd, native } from "../utilities/formatters";
 import BigNumber from "bignumber.js";
 import PortfolioBalancerV2 from "../contracts/PortfolioBalancerV2.json";
 import { getGasPrices } from "../services/getGasPrices";
-import { totalUsdBalance } from "../utilities/calculations";
+import { currentPrice, totalUsdBalance } from "../utilities/calculations";
 import PurchaseButton from "./PurchaseButton";
 import Help from "./Help";
 //import { usePrices } from "../hooks/usePrices";
@@ -97,29 +101,28 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
 
   const slippage = (
     ethAmount: string,
-    ethPrice: string,
+    ethPrice: number,
     tokenAmount: string,
-    tokenPrice: string
+    tokenPrice: number
   ): number => {
     return (
-      Number(tokenAmount) * Number(tokenPrice) -
-      (Number(ethAmount) / 1e18) * Number(ethPrice)
+      Number(tokenAmount) * tokenPrice - (Number(ethAmount) / 1e18) * ethPrice
     );
   };
 
   const totalSlippage = (
     tradeAmounts: TokenAmounts,
     uniswapAmounts: UniswapAmounts,
-    prices: TokenAmounts,
+    prices: HistorcialPrices,
     ethFee: string
   ): number => {
     let coinSlippages = 0;
     assets.forEach((token) => {
       coinSlippages += slippage(
         tradeAmounts[token],
-        prices.ETH,
+        currentPrice(prices, "ETH"),
         uniswapAmounts[token].amountOutMin,
-        prices[token]
+        currentPrice(prices, token)
       );
     });
     return coinSlippages + Number(ethFee);
@@ -172,7 +175,6 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
   useEffect(() => {
     const estimateFees = async () => {
       const inputs = txInput();
-      console.log("input", inputs);
       try {
         const gasFeeResults = Promise.all([
           portfolioBalancer.methods
@@ -185,7 +187,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
           new BigNumber(gasfee)
             .times(gasprices.standard)
             .dividedBy(1e20)
-            .times(prices!.ETH)
+            .times(currentPrice(prices!, "ETH"))
             .times(-1)
             .toString()
         );
@@ -245,7 +247,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                     <TableCell align="right">
                       {formatToUsd(
                         Number(uniswapAmounts[token].amountOutMin) *
-                          Number(prices[token])
+                          currentPrice(prices, token)
                       )}
                     </TableCell>
                     <TableCell align="right">
@@ -253,9 +255,9 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                         className={
                           slippage(
                             tradeAmounts[token],
-                            prices.ETH,
+                            currentPrice(prices, "ETH"),
                             uniswapAmounts[token].amountOutMin,
-                            prices[token]
+                            currentPrice(prices, token)
                           ) >= 0
                             ? classes.positive
                             : classes.negative
@@ -264,9 +266,9 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                         {formatToUsd(
                           slippage(
                             tradeAmounts[token],
-                            prices.ETH,
+                            currentPrice(prices, "ETH"),
                             uniswapAmounts[token].amountOutMin,
-                            prices[token]
+                            currentPrice(prices, token)
                           ),
                           "exceptZero"
                         )}
