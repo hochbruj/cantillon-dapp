@@ -86,7 +86,6 @@ const PortfolioDetail = () => {
   }, []);
 
   const handeleGetPortfolio = () => {
-    console.log(balances?.ETH);
     if (balances?.ETH === "0") {
       const message = {
         type: "error",
