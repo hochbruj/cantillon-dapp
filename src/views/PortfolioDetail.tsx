@@ -67,6 +67,9 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
+  link: {
+    color: "#1b95e0",
+  },
 }));
 
 interface PortfolioDetailState {
@@ -175,7 +178,11 @@ const PortfolioDetail = () => {
                   </TableCell>
                   <TableCell>
                     {" "}
-                    <Link href={tokens[token as Token].link} target="_blank">
+                    <Link
+                      href={tokens[token as Token].link}
+                      target="_blank"
+                      className={classes.link}
+                    >
                       {tokens[token as Token].name}
                     </Link>
                   </TableCell>

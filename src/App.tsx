@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { pink, deepPurple } from "@material-ui/core/colors";
 import Header from "./components/Header";
 import { CssBaseline, PaletteType } from "@material-ui/core";
 import Routes from "./views/Routes";
@@ -6,7 +7,6 @@ import Footer from "./components/Footer";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { Portfolio } from "./sharedTypes/portfolios";
-import { getPortfolios } from "./services/getPortfolios";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { StoreProvider } from "./store/store";
 import Web3Data from "./components/Web3Data";
@@ -21,6 +21,14 @@ export default function App() {
   const muiTheme = createMuiTheme({
     palette: {
       type: theme,
+      primary: {
+        // Purple and green play nicely together.
+        main: pink[400],
+      },
+      secondary: {
+        // This is green.A700 as hex.
+        main: deepPurple[500],
+      },
     },
   });
 

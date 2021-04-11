@@ -57,7 +57,7 @@ const Header: FC<HeaderProps> = ({ setTheme, theme }) => {
         <Typography align="left" variant="h4" color="inherit" noWrap>
           Cantillon
         </Typography>
-        <img alt="Logo" className={classes.logo} src="/images/Logo.png" />
+        {/* <img alt="Logo" className={classes.logo} src="/images/Logo.png" /> */}
         <div className={classes.flexGrow} />
         {connectedWeb3 && balances ? <WalletButton /> : <WalletConnectButton />}
         <ThemeButton setTheme={setTheme} theme={theme} />
