@@ -23,7 +23,7 @@ export default function App() {
       type: theme,
       primary: {
         // Purple and green play nicely together.
-        main: pink[400],
+        main: pink[600],
       },
       secondary: {
         // This is green.A700 as hex.
