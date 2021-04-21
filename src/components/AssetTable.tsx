@@ -97,7 +97,8 @@ const AssetTable = () => {
                   {formatPercentage(
                     (Number(normalized(balances![token], token)) *
                       currentPrice(prices!, token)) /
-                      totalUsdAmount
+                      totalUsdAmount,
+                    true
                   )}
                 </TableCell>
               </TableRow>

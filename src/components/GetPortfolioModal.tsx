@@ -328,7 +328,8 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                       uniswapAmounts,
                       prices,
                       ethFee
-                    ) / totalUsdBalance(balances!, prices)
+                    ) / totalUsdBalance(balances!, prices),
+                    true
                   )}
                   )
                 </Typography>

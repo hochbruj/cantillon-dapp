@@ -1,7 +1,11 @@
 import { Token } from "../sharedTypes/eth.types";
 
-export const formatPercentage = (value: number): string => {
-  return Math.abs(value * 100).toFixed(1) + "%";
+export const formatPercentage = (value: number, absolute: boolean): string => {
+  if (absolute) {
+    return Math.abs(value * 100).toFixed(1) + "%";
+  } else {
+    return (value * 100).toFixed(1) + "%";
+  }
 };
 
 export const formatAmount = (value: number): string => {

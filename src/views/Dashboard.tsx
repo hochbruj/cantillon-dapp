@@ -61,7 +61,8 @@ const Dashboard: FC = () => {
                   {formatToUsd(dailyDelta(balances, prices), "exceptZero")} (
                   {formatPercentage(
                     dailyDelta(balances, prices) /
-                      totalUsdBalance(balances!, prices)
+                      totalUsdBalance(balances!, prices),
+                    true
                   )}
                   )
                 </Typography>

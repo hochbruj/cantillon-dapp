@@ -184,7 +184,7 @@ const Portfolios = () => {
                               component="h2"
                               align="right"
                             >
-                              {formatPercentage(portfolio.year5.apy)}
+                              {formatPercentage(portfolio.year5.apy, false)}
                             </Typography>
                           </Grid>
                           <Grid item xs={8}>
@@ -202,7 +202,10 @@ const Portfolios = () => {
                               component="h2"
                               align="right"
                             >
-                              {formatPercentage(portfolio.year5.best12Months)}
+                              {formatPercentage(
+                                portfolio.year5.best12Months,
+                                false
+                              )}
                             </Typography>
                           </Grid>
                           <Grid item xs={8}>
@@ -220,7 +223,10 @@ const Portfolios = () => {
                               component="h2"
                               align="right"
                             >
-                              {formatPercentage(portfolio.year5.worst12Months)}
+                              {formatPercentage(
+                                portfolio.year5.worst12Months,
+                                false
+                              )}
                             </Typography>
                           </Grid>
                         </Grid>

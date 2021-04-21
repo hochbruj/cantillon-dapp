@@ -191,7 +191,8 @@ const PortfolioDetail = () => {
                     <TableCell>{tokens[token as Token].assetClass}</TableCell>
                     <TableCell align="right">
                       {formatPercentage(
-                        portfolio.weights[token as keyof Weights]
+                        portfolio.weights[token as keyof Weights],
+                        true
                       )}
                     </TableCell>
                   </TableRow>
@@ -223,43 +224,49 @@ const PortfolioDetail = () => {
             <TableRow>
               <TableCell>Total Return</TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year1.totalReturn)}
+                {formatPercentage(portfolio.year1.totalReturn, false)}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year3.totalReturn)}
+                {formatPercentage(portfolio.year3.totalReturn, false)}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year5.totalReturn)}
+                {formatPercentage(portfolio.year5.totalReturn, false)}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Annualized Return (APY)</TableCell>
-              <TableCell>{formatPercentage(portfolio.year1.apy)}</TableCell>
-              <TableCell>{formatPercentage(portfolio.year3.apy)}</TableCell>
-              <TableCell>{formatPercentage(portfolio.year5.apy)}</TableCell>
+              <TableCell>
+                {formatPercentage(portfolio.year1.apy, false)}
+              </TableCell>
+              <TableCell>
+                {formatPercentage(portfolio.year3.apy, false)}
+              </TableCell>
+              <TableCell>
+                {formatPercentage(portfolio.year5.apy, false)}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Best 12 months</TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year1.best12Months)}
+                {formatPercentage(portfolio.year1.best12Months, false)}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year3.best12Months)}
+                {formatPercentage(portfolio.year3.best12Months, false)}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year5.best12Months)}
+                {formatPercentage(portfolio.year5.best12Months, false)}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Worst 12 months</TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year1.worst12Months)}
+                {formatPercentage(portfolio.year1.worst12Months, false)}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year3.worst12Months)}
+                {formatPercentage(portfolio.year3.worst12Months, false)}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year5.worst12Months)}
+                {formatPercentage(portfolio.year5.worst12Months, false)}
               </TableCell>
             </TableRow>
           </TableBody>
