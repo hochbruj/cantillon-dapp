@@ -45,12 +45,24 @@ const Calculator: FC<CalculatorProps> = ({ portfolio }) => {
 
   const getAmounts = (amount: number): Amounts => {
     return {
-      year1Balance: formatAmount((portfolio.year1.totalReturn + 1) * amount),
-      year3Balance: formatAmount((portfolio.year3.totalReturn + 1) * amount),
-      year5Balance: formatAmount((portfolio.year5.totalReturn + 1) * amount),
-      year1Loss: formatAmount(portfolio.year1.worstReturn * amount * -1),
-      year3Loss: formatAmount(portfolio.year3.worstReturn * amount * -1),
-      year5Loss: formatAmount(portfolio.year5.worstReturn * amount * -1),
+      year1Balance: formatAmount(
+        (portfolio.yearlyReturns[1].totalReturn + 1) * amount
+      ),
+      year3Balance: formatAmount(
+        (portfolio.yearlyReturns[3].totalReturn + 1) * amount
+      ),
+      year5Balance: formatAmount(
+        (portfolio.yearlyReturns[5].totalReturn + 1) * amount
+      ),
+      year1Loss: formatAmount(
+        portfolio.yearlyReturns[1].worstReturn * amount * -1
+      ),
+      year3Loss: formatAmount(
+        portfolio.yearlyReturns[3].worstReturn * amount * -1
+      ),
+      year5Loss: formatAmount(
+        portfolio.yearlyReturns[5].worstReturn * amount * -1
+      ),
     };
   };
 
@@ -97,14 +109,22 @@ const Calculator: FC<CalculatorProps> = ({ portfolio }) => {
             <TableRow>
               <TableCell>Investment balance today</TableCell>
               <TableCell>{amounts.year1Balance}</TableCell>
-              <TableCell>{amounts.year3Balance}</TableCell>
-              <TableCell>{amounts.year5Balance}</TableCell>
+              <TableCell>
+                {portfolio.historyYears >= 3 ? amounts.year3Balance : "N/A"}
+              </TableCell>
+              <TableCell>
+                {portfolio.historyYears >= 5 ? amounts.year5Balance : "N/A"}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Maximum loss during period</TableCell>
               <TableCell>{amounts.year1Loss}</TableCell>
-              <TableCell>{amounts.year3Loss}</TableCell>
-              <TableCell>{amounts.year5Loss}</TableCell>
+              <TableCell>
+                {portfolio.historyYears >= 3 ? amounts.year3Loss : "N/A"}
+              </TableCell>
+              <TableCell>
+                {portfolio.historyYears >= 5 ? amounts.year5Loss : "N/A"}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>

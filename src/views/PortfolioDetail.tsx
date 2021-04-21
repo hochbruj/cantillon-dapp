@@ -224,49 +224,92 @@ const PortfolioDetail = () => {
             <TableRow>
               <TableCell>Total Return</TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year1.totalReturn, false)}
+                {formatPercentage(
+                  portfolio.yearlyReturns[1].totalReturn,
+                  false
+                )}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year3.totalReturn, false)}
+                {portfolio.historyYears >= 3
+                  ? formatPercentage(
+                      portfolio.yearlyReturns[3].totalReturn,
+                      false
+                    )
+                  : "N/A"}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year5.totalReturn, false)}
+                {portfolio.historyYears >= 5
+                  ? formatPercentage(
+                      portfolio.yearlyReturns[5].totalReturn,
+                      false
+                    )
+                  : "N/A"}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Annualized Return (APY)</TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year1.apy, false)}
+                {formatPercentage(portfolio.yearlyReturns[1].apy, false)}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year3.apy, false)}
+                {portfolio.historyYears >= 3
+                  ? formatPercentage(portfolio.yearlyReturns[3].apy, false)
+                  : "N/A"}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year5.apy, false)}
+                {portfolio.historyYears >= 3
+                  ? formatPercentage(portfolio.yearlyReturns[5].apy, false)
+                  : "N/A"}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Best 12 months</TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year1.best12Months, false)}
+                {formatPercentage(
+                  portfolio.yearlyReturns[1].best12Months,
+                  false
+                )}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year3.best12Months, false)}
+                {portfolio.historyYears >= 3
+                  ? formatPercentage(
+                      portfolio.yearlyReturns[3].best12Months,
+                      false
+                    )
+                  : "N/A"}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year5.best12Months, false)}
+                {portfolio.historyYears >= 5
+                  ? formatPercentage(
+                      portfolio.yearlyReturns[5].best12Months,
+                      false
+                    )
+                  : "N/A"}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Worst 12 months</TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year1.worst12Months, false)}
+                {formatPercentage(
+                  portfolio.yearlyReturns[1].worst12Months,
+                  false
+                )}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year3.worst12Months, false)}
+                {portfolio.historyYears >= 3
+                  ? formatPercentage(
+                      portfolio.yearlyReturns[3].worst12Months,
+                      false
+                    )
+                  : "N/A"}
               </TableCell>
               <TableCell>
-                {formatPercentage(portfolio.year5.worst12Months, false)}
+                {portfolio.historyYears >= 5
+                  ? formatPercentage(
+                      portfolio.yearlyReturns[5].worst12Months,
+                      false
+                    )
+                  : "N/A"}
               </TableCell>
             </TableRow>
           </TableBody>
@@ -274,46 +317,48 @@ const PortfolioDetail = () => {
       </Container>
       <Calculator portfolio={portfolio} />
       <Container className={classes.overview} maxWidth="md">
-        <Grid
-          container
-          direction="column"
-          justify="center"
-          alignItems="center"
-          spacing={2}
-        >
-          {connectedWeb3 && balances ? (
-            <>
-              <Grid item xs={12}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant="contained"
-                  onClick={handeleGetPortfolio}
-                >
-                  Get this portfolio
-                </Button>
-              </Grid>
-              {balances.ETH !== "0" && (
-                <GetPortfolioModal
-                  open={modalOpen}
-                  setModalOpen={setModalOpen}
-                  portfolio={portfolio}
-                />
-              )}
-            </>
-          ) : (
-            <>
-              <Grid item xs={12}>
-                <Typography>
-                  Please connect a wallet, if you want to get this portfolio{" "}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <WalletConnectButton />
-              </Grid>
-            </>
-          )}
-        </Grid>
+        {portfolio.id !== "4" && (
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            spacing={2}
+          >
+            {connectedWeb3 && balances ? (
+              <>
+                <Grid item xs={12}>
+                  <Button
+                    size="large"
+                    color="primary"
+                    variant="contained"
+                    onClick={handeleGetPortfolio}
+                  >
+                    Get this portfolio
+                  </Button>
+                </Grid>
+                {balances.ETH !== "0" && (
+                  <GetPortfolioModal
+                    open={modalOpen}
+                    setModalOpen={setModalOpen}
+                    portfolio={portfolio}
+                  />
+                )}
+              </>
+            ) : (
+              <>
+                <Grid item xs={12}>
+                  <Typography>
+                    Please connect a wallet, if you want to get this portfolio{" "}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <WalletConnectButton />
+                </Grid>
+              </>
+            )}
+          </Grid>
+        )}
       </Container>
     </main>
   );

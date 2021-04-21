@@ -166,7 +166,8 @@ const Portfolios = () => {
                           component="h2"
                           className={classes.bold}
                         >
-                          Historical Risk/Return (5 years)
+                          Historical Risk/Return ({portfolio.historyYears}{" "}
+                          years)
                         </Typography>
                         <Grid container>
                           <Grid item xs={8}>
@@ -184,7 +185,11 @@ const Portfolios = () => {
                               component="h2"
                               align="right"
                             >
-                              {formatPercentage(portfolio.year5.apy, false)}
+                              {formatPercentage(
+                                portfolio.yearlyReturns[portfolio.historyYears]
+                                  .apy,
+                                false
+                              )}
                             </Typography>
                           </Grid>
                           <Grid item xs={8}>
@@ -203,7 +208,8 @@ const Portfolios = () => {
                               align="right"
                             >
                               {formatPercentage(
-                                portfolio.year5.best12Months,
+                                portfolio.yearlyReturns[portfolio.historyYears]
+                                  .best12Months,
                                 false
                               )}
                             </Typography>
@@ -224,7 +230,8 @@ const Portfolios = () => {
                               align="right"
                             >
                               {formatPercentage(
-                                portfolio.year5.worst12Months,
+                                portfolio.yearlyReturns[portfolio.historyYears]
+                                  .worst12Months,
                                 false
                               )}
                             </Typography>
