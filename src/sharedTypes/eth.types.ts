@@ -1,5 +1,13 @@
 export type EthereumNetwork = "kovan" | "mainnet";
-export type Token = "WBTC" | "PMGT" | "aUSDC" | "ETH";
+export type Token =
+  | "WBTC"
+  | "PMGT"
+  | "aUSDC"
+  | "ETH"
+  | "UNI"
+  | "AAVE"
+  | "YFI"
+  | "REN";
 
 export type ContractsAddressesMap = {
   [key in EthereumNetwork]: {
@@ -8,6 +16,10 @@ export type ContractsAddressesMap = {
     USDC: string;
     PMGT: string;
     aUSDC: string;
+    UNI: string;
+    AAVE: string;
+    YFI: string;
+    REN: string;
     PortfolioBalancer: string;
   };
 };

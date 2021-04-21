@@ -165,35 +165,37 @@ const PortfolioDetail = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.keys(tokens).map((token: string) => (
-                <TableRow key={token}>
-                  <TableCell>
-                    <div className={classes.tokenContainer}>
-                      <img
-                        className={classes.avatar}
-                        src={`/tokens/${token}.png`}
-                      />
-                      <Typography variant="body1">{token}</Typography>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {" "}
-                    <Link
-                      href={tokens[token as Token].link}
-                      target="_blank"
-                      className={classes.link}
-                    >
-                      {tokens[token as Token].name}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{tokens[token as Token].assetClass}</TableCell>
-                  <TableCell align="right">
-                    {formatPercentage(
-                      portfolio.weights[token as keyof Weights]
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {Object.keys(tokens)
+                .filter((e) => portfolio.weights[e] > 0)
+                .map((token: string) => (
+                  <TableRow key={token}>
+                    <TableCell>
+                      <div className={classes.tokenContainer}>
+                        <img
+                          className={classes.avatar}
+                          src={`/tokens/${token}.png`}
+                        />
+                        <Typography variant="body1">{token}</Typography>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {" "}
+                      <Link
+                        href={tokens[token as Token].link}
+                        target="_blank"
+                        className={classes.link}
+                      >
+                        {tokens[token as Token].name}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{tokens[token as Token].assetClass}</TableCell>
+                    <TableCell align="right">
+                      {formatPercentage(
+                        portfolio.weights[token as keyof Weights]
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </Container>
