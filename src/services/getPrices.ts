@@ -43,7 +43,7 @@ export const getHistoricalPrices = async (): Promise<HistorcialPrices> => {
     let i = 0;
     for (const token of tokenList) {
       if (token === "ETH") {
-        prices[token] = priceArray[i].map((e: any[]) => e[1] * 100);
+        prices[token] = priceArray[i].map((e: any[]) => e[1]);
       } else {
         prices[token] = priceArray[i].map((e: any[]) => e[1]);
       }

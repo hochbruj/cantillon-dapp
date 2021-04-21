@@ -186,7 +186,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
         setEthFee(
           new BigNumber(gasfee)
             .times(gasprices.standard)
-            .dividedBy(1e20)
+            .dividedBy(1e18)
             .times(currentPrice(prices!, "ETH"))
             .times(-1)
             .toString()
