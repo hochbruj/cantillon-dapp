@@ -1,11 +1,12 @@
 export interface Portfolio {
   id: string;
   name: string;
+  historyYears: number;
   description: string;
   weights: Weights;
-  year1: Returns;
-  year3: Returns;
-  year5: Returns;
+  yearlyReturns: {
+    [key: number]: Returns;
+  };
 }
 
 export interface Returns {
