@@ -28,7 +28,7 @@ export const contractsAddressesMap: ContractsAddressesMap = Object.freeze({
     UNI: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
     YFI: "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
     REN: "0x408e41876cccdc0f92210600ef50372656052a38",
-    PortfolioBalancer: "0xd2a12039ed1072656ee41bfc7a293d58bf5711e3",
+    PortfolioBalancer: "0x1d48374D4aAd292b95EB2bb6b68E8C052432ACA0",
   },
 });
 
