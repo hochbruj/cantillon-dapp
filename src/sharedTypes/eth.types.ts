@@ -15,6 +15,7 @@ export type ContractsAddressesMap = {
     WBTC: string;
     USDC: string;
     PMGT: string;
+    PAXG: string;
     aUSDC: string;
     UNI: string;
     AAVE: string;
