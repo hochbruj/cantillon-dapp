@@ -36,7 +36,7 @@ const Dashboard: FC = () => {
   const { state } = useStore();
   const { balances, connectedWeb3, prices } = state;
 
-  if (!connectedWeb3) {
+  if (!connectedWeb3 || !state.user?.portfolioId) {
     return <Redirect to={ROUTES.PORTFOLIOS} />;
   }
 

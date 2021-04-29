@@ -1,15 +1,17 @@
-import { FC, useState, useEffect, useRef } from "react";
+import { FC, useState } from "react";
 import { Button, CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useStore, Message } from "../store/store";
-import { networks } from "../config/ethData";
 import { useBalances } from "../hooks/useBalances";
 import { useHistory } from "react-router-dom";
 import { ROUTES } from "../config/routes";
+import { saveBalance } from "../services/firebase/balance";
+import { savePortfolio } from "../services/firebase/user";
 
 interface PurchaseButtonProps {
   txInput: any;
   portfolioBalancer: any;
+  portfolioId: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 const PurchaseButton: FC<PurchaseButtonProps> = ({
   txInput,
   portfolioBalancer,
+  portfolioId,
 }) => {
   const classes = useStyles();
   const { state, dispatch } = useStore();
@@ -49,6 +52,14 @@ const PurchaseButton: FC<PurchaseButtonProps> = ({
           gas: "700000",
           gasPrice: "1000000000",
         });
+      //save initial old balances
+      saveBalance(connectedWeb3!.account, state.balances!);
+      //set portfolio in firebase and store
+      const user = state.user!;
+      user.portfolioId = portfolioId;
+      console.log("updating user");
+      dispatch({ type: "updateUser", user });
+      savePortfolio(connectedWeb3!.account, portfolioId);
       setUpdateBalance(true);
       const message = {
         type: "success",

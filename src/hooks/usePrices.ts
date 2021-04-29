@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../store/store";
-import { getHistoricalPrices } from "../services/getPrices";
+import { getHistoricalPrices } from "../services/api/getPrices";
 
 export const usePrices = () => {
   const { dispatch } = useStore();

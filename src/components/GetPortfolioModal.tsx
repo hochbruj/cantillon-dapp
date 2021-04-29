@@ -26,7 +26,7 @@ import { useStore } from "../store/store";
 import { formatPercentage, formatToUsd, native } from "../utilities/formatters";
 import BigNumber from "bignumber.js";
 import PortfolioBalancerV2 from "../contracts/PortfolioBalancerV2.json";
-import { getGasPrices } from "../services/getGasPrices";
+import { getGasPrices } from "../services/api/getGasPrices";
 import { currentPrice, totalUsdBalance } from "../utilities/calculations";
 import PurchaseButton from "./PurchaseButton";
 import Help from "./Help";
@@ -186,7 +186,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
         setEthFee(
           new BigNumber(gasfee)
             .times(gasprices.standard)
-            .dividedBy(1e20)
+            .dividedBy(1e18)
             .times(currentPrice(prices!, "ETH"))
             .times(-1)
             .toString()
@@ -348,6 +348,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
                 <PurchaseButton
                   txInput={txInput()}
                   portfolioBalancer={portfolioBalancer}
+                  portfolioId={portfolio.id}
                 />
               </Grid>
             </Grid>

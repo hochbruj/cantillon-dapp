@@ -1,6 +1,6 @@
 import axios from "axios";
-import { gasPriceUrl } from "../config/apis";
-import { GasPrices } from "../sharedTypes/eth.types";
+import { gasPriceUrl } from "../../config/apis";
+import { GasPrices } from "../../sharedTypes/eth.types";
 
 export const getGasPrices = async (): Promise<GasPrices> => {
   let gasPrices = {} as GasPrices;

@@ -7,6 +7,7 @@ import {
   HistorcialPrices,
 } from "../sharedTypes/eth.types";
 import { Portfolio } from "../sharedTypes/portfolios";
+import { User } from "../sharedTypes/user.types";
 
 interface State {
   connectedWeb3: ConnectedWeb3 | null;
@@ -14,6 +15,7 @@ interface State {
   prices: HistorcialPrices | null;
   message: Message | null;
   portfolios: Portfolio[] | null;
+  user: User | null;
 }
 
 export interface ConnectedWeb3 {
@@ -37,7 +39,8 @@ type Action =
   | { type: "updateAccount"; account: string }
   | { type: "updatePrices"; prices: HistorcialPrices }
   | { type: "updateMessage"; message: Message | null }
-  | { type: "loadPortfolios"; portfolios: Portfolio[] };
+  | { type: "loadPortfolios"; portfolios: Portfolio[] }
+  | { type: "updateUser"; user: User };
 
 const initialState: State = {
   connectedWeb3: null,
@@ -45,6 +48,7 @@ const initialState: State = {
   prices: null,
   message: null,
   portfolios: null,
+  user: null,
 };
 
 type StoreContextType = {
@@ -70,6 +74,8 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         connectedWeb3: null,
+        user: null,
+        balances: null,
       };
     case "updateBalances":
       return {
@@ -90,6 +96,11 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         portfolios: action.portfolios,
+      };
+    case "updateUser":
+      return {
+        ...state,
+        user: action.user,
       };
   }
 };

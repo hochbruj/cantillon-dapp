@@ -1,11 +1,11 @@
 import axios from "axios";
-import { priceUrl } from "../config/apis";
-import { tokens } from "../config/ethData";
+import { priceUrl } from "../../config/apis";
+import { tokens } from "../../config/ethData";
 import {
   HistorcialPrices,
   Token,
   TokenAmounts,
-} from "../sharedTypes/eth.types";
+} from "../../sharedTypes/eth.types";
 
 export const getPrices = async (): Promise<TokenAmounts> => {
   const tokenList = Object.keys(tokens) as [Token];
@@ -15,7 +15,7 @@ export const getPrices = async (): Promise<TokenAmounts> => {
   const result = await axios.get(url);
   for (const token of tokenList) {
     //hack for kovan
-    if (token === "ETH") {
+    if (token === "ETH" && process.env.REACT_APP_ETHEREUM_NETWORK === "kovan") {
       prices[token] = (
         result.data[tokens[token].coingeckoId]["usd"] * 100
       ).toString();
@@ -42,7 +42,10 @@ export const getHistoricalPrices = async (): Promise<HistorcialPrices> => {
 
     let i = 0;
     for (const token of tokenList) {
-      if (token === "ETH") {
+      if (
+        token === "ETH" &&
+        process.env.REACT_APP_ETHEREUM_NETWORK === "kovan"
+      ) {
         prices[token] = priceArray[i].map((e: any[]) => e[1] * 100);
       } else {
         prices[token] = priceArray[i].map((e: any[]) => e[1]);
