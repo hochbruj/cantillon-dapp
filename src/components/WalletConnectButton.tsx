@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef } from "react";
+import { FC, useState, useEffect } from "react";
 import { Button, CircularProgress } from "@material-ui/core";
 import Web3Modal from "web3modal";
 import Web3 from "web3";
@@ -9,6 +9,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useStore, ConnectedWeb3, Message } from "../store/store";
 import { networks } from "../config/ethData";
 import { useBalances } from "../hooks/useBalances";
+import { capitalize } from "../utilities/formatters";
+import { getUser, saveUser } from "../services/firebase/user";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -85,13 +87,20 @@ const WalletConnectButton: FC = () => {
       if (networks[networkId] != process.env.REACT_APP_ETHEREUM_NETWORK) {
         const message: Message = {
           type: "error",
-          text: `Wrong network! Please change your wallet to Kovan Test Network.`,
+          text: `Wrong network! Please change your wallet to ${capitalize(
+            process.env.REACT_APP_ETHEREUM_NETWORK!
+          )} Network.`,
         };
         dispatch({ type: "updateMessage", message });
         setLoading(false);
       } else {
         dispatch({ type: "connectWeb3", connectedWeb3 });
         setAccount(account);
+        //save user with new timestamps
+        await saveUser(wallet, account);
+        //load user into store
+        const user = await getUser(account);
+        dispatch({ type: "updateUser", user });
       }
     } catch (e) {
       setLoading(false);

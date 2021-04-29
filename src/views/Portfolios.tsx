@@ -81,8 +81,7 @@ const Portfolios = () => {
   }, [portfolios]);
 
   useEffect(() => {
-    //hack unitl we get more user info from firebase
-    if (connectedWeb3 && balances && balances.aUSDC !== "0") {
+    if (state.user?.portfolioId) {
       history.push(ROUTES.DASHBOARD);
     }
   });

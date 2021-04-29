@@ -3,6 +3,7 @@ import { useStore } from "../store/store";
 import { tokens, contractsAddressesMap } from "../config/ethData";
 import { TokenAmounts, Token } from "../sharedTypes/eth.types";
 import ERC20 from "../contracts/ERC20.json";
+import { saveBalance } from "../services/firebase/balance";
 
 export const useBalances = (account: string) => {
   const { state, dispatch } = useStore();
@@ -36,11 +37,14 @@ export const useBalances = (account: string) => {
     }
     balances.ETH = await web3!.eth.getBalance(account!);
     dispatch({ type: "updateBalances", balances });
+    //update in firebase
+    if (updateBalance) {
+      saveBalance(account, balances);
+    }
   };
 
   useEffect(() => {
     if (updateBalance) {
-      console.log("calling b inside update balances");
       getBalances();
       setUpdateBalance(false);
     }

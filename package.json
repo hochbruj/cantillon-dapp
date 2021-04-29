@@ -21,6 +21,7 @@
     "bignumber.js": "^9.0.1",
     "copy-to-clipboard": "^3.3.1",
     "ethers": "^5.0.32",
+    "firebase": "^8.4.2",
     "fortmatic": "^2.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

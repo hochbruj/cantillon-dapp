@@ -317,7 +317,7 @@ const PortfolioDetail = () => {
       </Container>
       <Calculator portfolio={portfolio} />
       <Container className={classes.overview} maxWidth="md">
-        {portfolio.id !== "99999" && (
+        {portfolio.id !== "4" && (
           <Grid
             container
             direction="column"
