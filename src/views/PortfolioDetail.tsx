@@ -317,7 +317,8 @@ const PortfolioDetail = () => {
       </Container>
       <Calculator portfolio={portfolio} />
       <Container className={classes.overview} maxWidth="md">
-        {portfolio.id !== "4" && (
+        {(portfolio.id !== "4" ||
+          process.env.REACT_APP_ETHEREUM_NETWORK === "mainnet") && (
           <Grid
             container
             direction="column"

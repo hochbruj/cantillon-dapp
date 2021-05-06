@@ -22,7 +22,7 @@ export const contractsAddressesMap: ContractsAddressesMap = Object.freeze({
   mainnet: {
     ETH: "0x",
     WBTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-    PMGT: "0x45804880De22913dAFE09f4980848ECE6EcbAf78",
+    PMGT: "0xaffcdd96531bcd66faed95fc61e443d08f79efef",
     PAXG: "0x45804880De22913dAFE09f4980848ECE6EcbAf78",
     USDC: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     aUSDC: "0xBcca60bB61934080951369a648Fb03DF4F96263C",
@@ -30,7 +30,7 @@ export const contractsAddressesMap: ContractsAddressesMap = Object.freeze({
     UNI: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
     YFI: "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
     REN: "0x408e41876cccdc0f92210600ef50372656052a38",
-    PortfolioBalancer: "0xC51933871A2C99f51Ea3dFC7aC68F1d3f21b6356",
+    PortfolioBalancer: "0xfa59b1e8a2b0a9ca24a33843062a4ab202329d1f",
   },
 });
 
@@ -104,4 +104,5 @@ export const networks: NetworkMap = Object.freeze({
   42: "kovan" as EthereumNetwork,
   1: "mainnet" as EthereumNetwork,
   999: "mainnet" as EthereumNetwork,
+  1337: "mainnet" as EthereumNetwork,
 });

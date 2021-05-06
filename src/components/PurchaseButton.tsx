@@ -44,13 +44,12 @@ const PurchaseButton: FC<PurchaseButtonProps> = ({
   const purchaseAssets = async () => {
     setLoading(true);
     try {
+      console.log("sendin to tx", txInput);
       const result = await portfolioBalancer.methods
         .rebalance(txInput[0], txInput[1], txInput[2])
         .send({
           from: connectedWeb3!.account,
           value: txInput[3],
-          gas: "700000",
-          gasPrice: "1000000000",
         });
       //save initial old balances
       saveBalance(connectedWeb3!.account, state.balances!);
