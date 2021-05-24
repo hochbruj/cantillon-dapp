@@ -83,21 +83,52 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
   const { prices, balances, connectedWeb3 } = state;
   const { web3, account, network } = connectedWeb3!;
   const [ethFee, setEthFee] = useState<string | null>(null);
+  const [tradeAmounts, setTradeAmounts] = useState<TokenAmounts>();
+  const [txInput, setTxInput] =
+    useState<[string[], string[], string[], string]>();
   //const setUpdatePrices = usePrices();
 
   const assets = Object.keys(tokens).filter(
     (token) => portfolio.weights[token] > 0 && token !== "ETH"
   ) as [Token];
 
-  let tradeAmounts = {} as TokenAmounts;
-  assets.forEach(
-    (token) =>
-      (tradeAmounts[token] = new BigNumber(balances!.ETH)
-        .times(portfolio.weights[token])
-        .toFixed(0))
-  );
+  useEffect(() => {
+    let _tradeAmounts = {} as TokenAmounts;
+    assets.forEach(
+      (token) =>
+        (_tradeAmounts[token] = new BigNumber(balances!.ETH)
+          .times(portfolio.weights[token])
+          .toFixed(0))
+    );
+    setTradeAmounts(_tradeAmounts);
+  }, [balances]);
 
-  const { uniswapAmounts, setUpdateUniswap } = useUniswap(tradeAmounts);
+  const { uniswapAmounts, setUpdateUniswap } = useUniswap(tradeAmounts!);
+
+  console.log(uniswapAmounts, tradeAmounts, txInput, ethFee);
+
+  useEffect(() => {
+    if (tradeAmounts && uniswapAmounts) {
+      const tokenAddresses = assets.map(
+        (token) => contractsAddressesMap[network][native(token)]
+      );
+      const inputAmounts = assets.map((token) => tradeAmounts![token]);
+      const minOutAmounts = assets.map(
+        (token) => uniswapAmounts![token].amountOutMinRaw
+      );
+
+      const totalAmountETH = inputAmounts.reduce(
+        (a, b) => a.plus(b),
+        new BigNumber(0)
+      );
+      setTxInput([
+        tokenAddresses,
+        inputAmounts,
+        minOutAmounts,
+        totalAmountETH.toString(),
+      ]);
+    }
+  }, [tradeAmounts, uniswapAmounts]);
 
   const slippage = (
     ethAmount: string,
@@ -133,28 +164,6 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
     contractsAddressesMap[network].PortfolioBalancer
   );
 
-  const txInput = () => {
-    const tokenAddresses = assets.map(
-      (token) => contractsAddressesMap[network][native(token)]
-    );
-    const inputAmounts = assets.map((token) => tradeAmounts[token]);
-    const minOutAmounts = assets.map(
-      (token) => uniswapAmounts![token].amountOutMinRaw
-    );
-
-    const totalAmountETH = inputAmounts.reduce(
-      (a, b) => a.plus(b),
-      new BigNumber(0)
-    );
-
-    return [
-      tokenAddresses,
-      inputAmounts,
-      minOutAmounts,
-      totalAmountETH.toString(),
-    ];
-  };
-
   // const sleep = (ms: number) => {
   //   return new Promise((resolve) => {
   //     setTimeout(resolve, ms);
@@ -174,12 +183,11 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
 
   useEffect(() => {
     const estimateFees = async () => {
-      const inputs = txInput();
       try {
         const gasFeeResults = Promise.all([
           portfolioBalancer.methods
-            .rebalance(inputs[0], inputs[1], inputs[2])
-            .estimateGas({ from: account, value: inputs[3] }),
+            .rebalance(txInput![0], txInput![1], txInput![2])
+            .estimateGas({ from: account, value: txInput![3] }),
           getGasPrices(),
         ]);
         const [gasfee, gasprices] = await gasFeeResults;
@@ -195,14 +203,14 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
         console.log(e);
       }
     };
-    if (uniswapAmounts && prices) {
+    if (uniswapAmounts && prices && txInput) {
       estimateFees();
     }
-  }, [uniswapAmounts, prices]);
+  }, [uniswapAmounts, prices, txInput]);
 
   return (
     <Dialog open={open} onClose={() => setModalOpen(false)}>
-      {uniswapAmounts && prices && ethFee ? (
+      {uniswapAmounts && prices && ethFee && tradeAmounts && txInput ? (
         <>
           <DialogTitle id="simple-dialog-title">
             <Grid container direction="row" alignContent="flex-start">
@@ -346,7 +354,7 @@ const GetPortfolioModal: FC<GetPortfolioModalProps> = ({
             >
               <Grid item xs={12}>
                 <PurchaseButton
-                  txInput={txInput()}
+                  txInput={txInput}
                   portfolioBalancer={portfolioBalancer}
                   portfolioId={portfolio.id}
                 />

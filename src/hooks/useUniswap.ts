@@ -64,16 +64,19 @@ export const useUniswap = (tradeAmounts: TokenAmounts) => {
             .minimumAmountOut(slippageTolerance)
             .toSignificant(6),
           amountOutMinRaw: "0",
+          // amountOutMinRaw: trade
+          //   .minimumAmountOut(slippageTolerance)
+          //   .raw.toString(),
         };
 
         i++;
       }
       setUniswapAmounts(amounts);
     }
-    if (updateUniswap) {
+    if (updateUniswap && tradeAmounts) {
       getUniswap();
       setUpdateUniswap(false);
     }
-  }, [updateUniswap]);
+  }, [updateUniswap, tradeAmounts]);
   return { uniswapAmounts, setUpdateUniswap };
 };
